@@ -1,0 +1,350 @@
+// Priority only: no treasury debit, hero payout, flag or timer is created.
+function WHP_BreachIncentiveScore(agent Hero, agent Target, boolean CanDawnfall) is integer
+declare
+    integer greedmod, distance;
+begin
+    greedmod = Hero's "greed" / #greed_div;
+    if (greedmod == 0) greedmod = 1;
+    greedmod = greedmod * #reward_multiplier;
+    distance = $distancebetweenagents(Hero, Target);
+    if (CanDawnfall) distance = #WHP_DawnfallScoringDistance;
+    if (distance < 100) distance = 100;
+    return (500 * greedmod) / distance;
+end
+
+// Reuse the one stock reward query. Never suppress a real flag's dispatch.
+function WHP_BreachHasPlayerFlag(agent Hero, agent Target, list Flags) is boolean
+declare
+    agent Flag;
+    boolean Found;
+begin
+    Found = FALSE;
+    foreach Flag in Flags do
+        begin
+            if (Flag's "title" == "flag_attack")
+                if ($GetUnitPlayerNumber(Flag) == $GetUnitPlayerNumber(Hero))
+                    if ($GetAttribute(Flag, #ATTRIB_rewardcost) > 0)
+                        if ($AgentNumber($GetAttribute(Flag, #ATTRIB_TargetID)) == Target)
+                            Found = TRUE;
+        end
+    return Found;
+end
+
+function check_rewards ( agent thisagent , boolean no_attack ) is boolean
+declare
+list flags;
+agent flag;
+agent bestflag;
+agent target;
+integer bestscore;
+integer score;
+integer greedmod;
+integer others;
+integer rewardcost;
+integer distance;
+boolean mm_rs_allowed;
+boolean mm_rs_attackvalid;
+integer mm_rs_evaluation;
+integer mm_rs_distance;
+list mm_rs_eligibleflags;
+integer mm_rs_df85c6156988_travel;
+list mm_rs_df85c6156988_targets;
+list mm_rs_df85c6156988_distances;
+integer mm_rs_df85c6156988_index;
+boolean mm_rs_df85c6156988_found;
+list mm_rs_candidates;
+agent mm_rs_extra;
+agent mm_rs_bestextra;
+agent mm_rs_rawflag;
+boolean mm_rs_suppressed;
+integer mm_rs_extrascore;
+begin
+	$listobjects ( thisagent , "RewardFlag" , - 1 , flags , #rewardflags ) ;
+	bestscore = 1 ;
+	mm_rs_bestextra = $nullagent ( ) ;
+	greedmod = thisagent's "greed" / #greed_div ;
+	if ( greedmod == 0 )
+	begin
+		greedmod = 1 ;
+	end
+	greedmod = greedmod * #reward_multiplier ;
+	foreach flag in flags do
+	begin
+		mm_rs_attackvalid = false ;
+		mm_rs_allowed = true ;
+		rewardcost = $getattribute ( flag , #attrib_rewardcost ) ;
+		if ( rewardcost > 0 )
+		begin
+			distance = $distancebetweenagents ( thisagent , flag ) ;
+			if ( distance < 100 )
+			begin
+				distance = 100 ;
+			end
+			score = ( rewardcost * greedmod ) / distance ;
+			others = $listsize ( flag's "heroes" ) ;
+			if ( flag's "title" == "flag_attack" )
+			begin
+				if ( no_attack )
+				begin
+					score = 0 ;
+				end
+				else
+				begin
+					if ( $notvalid ( $agentnumber ( $getattribute ( flag , #attrib_targetid ) ) ) )
+					begin
+						score = 0 ;
+					end
+					else
+					begin
+						target = $agentnumber ( $getattribute ( flag , #attrib_targetid ) ) ;
+						mm_rs_attackvalid = ( target != thisagent ) ;
+						if ( mm_rs_attackvalid )
+						begin
+							mm_rs_distance = distance ;
+							mm_rs_df85c6156988_travel = 0 ;
+							mm_rs_df85c6156988_found = false ;
+							mm_rs_df85c6156988_index = 1 ;
+							while ( mm_rs_df85c6156988_index <= $listsize ( mm_rs_df85c6156988_targets ) ) do
+							begin
+								if ( $listmember ( mm_rs_df85c6156988_targets , mm_rs_df85c6156988_index ) == target )
+								begin
+									mm_rs_df85c6156988_travel = $listmember ( mm_rs_df85c6156988_distances , mm_rs_df85c6156988_index ) ;
+									mm_rs_df85c6156988_found = true ;
+								end
+								mm_rs_df85c6156988_index += 1 ;
+							end
+							if ( mm_rs_df85c6156988_found == false )
+							begin
+								mm_rs_df85c6156988_travel = $whp_rewardattackdistance ( thisagent , target ) ;
+								if ( mm_rs_df85c6156988_travel < 0 )
+								begin
+									mm_rs_df85c6156988_travel = 0 ;
+								end
+								mm_rs_df85c6156988_targets << target ;
+								mm_rs_df85c6156988_distances << mm_rs_df85c6156988_travel ;
+							end
+							if ( ( mm_rs_df85c6156988_travel > 0 ) && ( mm_rs_df85c6156988_travel < mm_rs_distance ) )
+							begin
+								mm_rs_distance = mm_rs_df85c6156988_travel ;
+							end
+							if ( mm_rs_distance < 100 )
+							begin
+								mm_rs_distance = 100 ;
+							end
+							if ( mm_rs_distance != distance )
+							begin
+								score = ( rewardcost * greedmod ) / mm_rs_distance ;
+							end
+						end
+						if ( target == thisagent )
+						begin
+							score = 0 ;
+						end
+						else
+						begin
+							if ( ( target's "type" != "building" ) && ( target's "type" != "lair" ) )
+							begin
+								mm_rs_evaluation = $target_eval ( thisagent , target ) ;
+								mm_rs_evaluation = $whp_rewardtargetevaluation ( thisagent , target , mm_rs_evaluation , mm_rs_df85c6156988_travel ) ;
+								score += mm_rs_evaluation ;
+							end
+						end
+						if ( $getunitplayernumber ( thisagent ) == $getunitplayernumber ( target ) )
+						begin
+							score -= thisagent's "loyalty" * #attack_flag_loyalty_mod ;
+						end
+						else
+						begin
+							if ( $getplayerteamnumber ( thisagent ) == $getplayerteamnumber ( target ) )
+							begin
+								score -= thisagent's "loyalty" * #attack_flag_loyalty_mod ;
+							end
+						end
+						score -= others * #attack_flag_mod ;
+					end
+				end
+			end
+			else
+			begin
+				if ( flag's "title" == "flag_explore" )
+				begin
+					if ( $getunitplayernumber ( thisagent ) != $getunitplayernumber ( flag ) )
+					begin
+						score = 0 ;
+					end
+					else
+					begin
+						score -= others * #explore_flag_mod ;
+					end
+				end
+			end
+			if ( mm_rs_allowed )
+			begin
+				mm_rs_eligibleflags << flag ;
+			end
+			if ( mm_rs_allowed && mm_rs_attackvalid )
+			begin
+				score += $whp_rewardflagincentive ( thisagent , flag , target , score , mm_rs_df85c6156988_travel ) ;
+			end
+			$debugout ( score ) ;
+			if ( mm_rs_allowed )
+			begin
+				if ( score > bestscore )
+				begin
+					bestscore = score ;
+					bestflag = flag ;
+				end
+			end
+		end
+	end
+	if ( no_attack == false )
+	begin
+		mm_rs_candidates = $whp_rewardextracandidates ( thisagent ) ;
+		foreach mm_rs_extra in mm_rs_candidates do
+		begin
+			if ( $notvalid ( mm_rs_extra ) == false )
+			begin
+				if ( $isdead ( mm_rs_extra ) == false )
+				begin
+					if ( ( mm_rs_extra != thisagent ) && ( mm_rs_extra's "type" == "lair" ) )
+					begin
+						if ( $whp_rewardextraeligible ( thisagent , mm_rs_extra ) )
+						begin
+							mm_rs_suppressed = false ;
+							foreach mm_rs_rawflag in mm_rs_eligibleflags do
+							begin
+								if ( mm_rs_rawflag's "title" == "flag_attack" )
+								begin
+									if ( $getattribute ( mm_rs_rawflag , #attrib_rewardcost ) > 0 )
+									begin
+										if ( $getunitplayernumber ( mm_rs_rawflag ) == $getunitplayernumber ( thisagent ) )
+										begin
+											if ( $agentnumber ( $getattribute ( mm_rs_rawflag , #attrib_targetid ) ) == mm_rs_extra )
+											begin
+												mm_rs_suppressed = true ;
+											end
+										end
+									end
+								end
+							end
+							if ( mm_rs_suppressed == false )
+							begin
+								mm_rs_df85c6156988_travel = 0 ;
+								mm_rs_df85c6156988_found = false ;
+								mm_rs_df85c6156988_index = 1 ;
+								while ( mm_rs_df85c6156988_index <= $listsize ( mm_rs_df85c6156988_targets ) ) do
+								begin
+									if ( $listmember ( mm_rs_df85c6156988_targets , mm_rs_df85c6156988_index ) == mm_rs_extra )
+									begin
+										mm_rs_df85c6156988_travel = $listmember ( mm_rs_df85c6156988_distances , mm_rs_df85c6156988_index ) ;
+										mm_rs_df85c6156988_found = true ;
+									end
+									mm_rs_df85c6156988_index += 1 ;
+								end
+								if ( mm_rs_df85c6156988_found == false )
+								begin
+									mm_rs_df85c6156988_travel = $whp_rewardattackdistance ( thisagent , mm_rs_extra ) ;
+									if ( mm_rs_df85c6156988_travel < 0 )
+									begin
+										mm_rs_df85c6156988_travel = 0 ;
+									end
+									mm_rs_df85c6156988_targets << mm_rs_extra ;
+									mm_rs_df85c6156988_distances << mm_rs_df85c6156988_travel ;
+								end
+								mm_rs_extrascore = $whp_rewardextrascore ( thisagent , mm_rs_extra , mm_rs_df85c6156988_travel ) ;
+								if ( mm_rs_extrascore > bestscore )
+								begin
+									bestscore = mm_rs_extrascore ;
+									mm_rs_bestextra = mm_rs_extra ;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	if ( mm_rs_bestextra != $nullagent ( ) )
+	begin
+		thisagent's "ActiveScript" = $attack_object ;
+		thisagent's "Target" = mm_rs_bestextra ;
+		$specifyintent ( thisagent , #intent_raiding ) ;
+		return true ;
+	end
+	if ( bestscore > 1 )
+	begin
+		if ( bestflag's "title" == "flag_explore" )
+		begin
+			$specifyintent ( thisagent , #intent_going_to_explore_flag ) ;
+			thisagent's "activescript" = $travel_to ;
+			thisagent's "backscript" = thisagent's "basicscript" ;
+			thisagent's "target" = thisagent ;
+			thisagent's "destination" = $locationof ( bestflag ) ;
+			$move ( thisagent , thisagent's "destination" ) ;
+			bestflag's "heroes" << thisagent ;
+			$setparent ( thisagent , bestflag ) ;
+		end
+		if ( ( bestflag's "title" == "flag_attack" ) || ( bestflag's "title" == "flag_guard" ) )
+		begin
+			$specifyintent ( thisagent , #intent_going_to_attack_flag ) ;
+			thisagent's "target" = $agentnumber ( $getattribute ( bestflag , #attrib_targetid ) ) ;
+			thisagent's "activescript" = $attack_object ;
+			bestflag's "heroes" << thisagent ;
+			$setparent ( thisagent , bestflag ) ;
+		end
+		$say ( thisagent , "VFX_GO_REWARD" ) ;
+		return true ;
+	end
+	return false ;
+end
+
+
+// stock.reward-selection.v1: read-only queries for one selector invocation.
+function WHP_RewardAttackDistance(agent Hero, agent Target) is integer
+declare
+begin
+    if ($WHP_DawnfallCanReach(Hero, Target)) return #WHP_DawnfallScoringDistance;
+    return 0;
+end
+
+function WHP_RewardTargetEvaluation(agent Hero, agent Target, integer StockValue, integer TravelValue) is integer
+declare
+    integer Score;
+begin
+    Score = StockValue;
+    if (TravelValue > 0)
+        begin
+            Score += $DistanceBetweenAgents(Hero, Target) / 250;
+            Score -= #WHP_DawnfallScoringDistance / 250;
+        end
+    return Score;
+end
+
+function WHP_RewardFlagIncentive(agent Hero, agent Flag, agent Target, integer Score, integer TravelValue) is integer
+declare
+begin
+    if (Flag's "Title" != "flag_attack") return 0;
+    if ($GetUnitPlayerNumber(Flag) != $GetUnitPlayerNumber(Hero)) return 0;
+    if ($WHP_BreachAllows(Hero, Target) == FALSE) return 0;
+    return $WHP_BreachIncentiveScore(Hero, Target, TravelValue > 0);
+end
+
+function WHP_RewardExtraCandidates(agent Hero) is list
+declare
+    list Lairs;
+begin
+    $ListObjects(Hero, "Lair", -1, Lairs, #NotMyTeam);
+    return Lairs;
+end
+
+function WHP_RewardExtraEligible(agent Hero, agent Target) is boolean
+declare
+begin
+    return $WHP_BreachAllows(Hero, Target);
+end
+
+function WHP_RewardExtraScore(agent Hero, agent Target, integer TravelValue) is integer
+declare
+begin
+    return $WHP_BreachIncentiveScore(Hero, Target, TravelValue > 0);
+end

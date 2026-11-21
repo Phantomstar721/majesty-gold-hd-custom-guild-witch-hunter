@@ -1,0 +1,24 @@
+function WHP_BuildingDamageModifier ( agent attacker, agent defender, integer dmg ) is integer
+// This function checks to see how damage from normal attacks is modified when attacking buildings.
+declare
+	agent AIRootAgent;
+
+begin
+	AIRootAgent = $RetrieveAgent ( "GplAIRoot" );
+
+	// If the attacker is a hero and deathmatch rules apply, multiply the building damage appropriately.
+	if ( attacker's "subtype" == "hero" )
+		if ( $HasAttribute ( "Deathmatch_Rules", AIRootAgent ))
+			if ( AIRootAgent's "Deathmatch_Rules" == TRUE )
+				begin
+					dmg *= #Deathmatch_Building_Damage_Multiplier;
+					return dmg;
+				end
+
+	// Otherwise damage against buildings is halved.
+	if ($WHP_BreachAllows(attacker, defender)) return dmg;
+	dmg /= 2;
+	return dmg;
+end
+
+///////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,88 @@
+// Guarded v8 consumer. Native movement only through declared provider.
+function WHP_DawnfallEligible(agent Caster, agent Target, integer Phase) is boolean
+declare
+begin
+    if ($WHP_DawnfallProviderReady(Caster) != 1) return FALSE;
+    if ($WHP_DawnfallTarget(Caster, Target) == FALSE) return FALSE;
+    if ((Phase != 0) && (Phase != 1)) return FALSE;
+    if ($WHP_DawnfallProviderBoundary(Caster, Target, Phase) == FALSE) return FALSE;
+    if (Phase == 1)
+        if (Caster's "Target" != Target) return FALSE;
+    if (Target's "Type" == "Lair")
+        begin
+            // Selection already belongs to stock/quest/reward task ownership.
+            if (Caster's "Target" != Target) return FALSE;
+        end
+    return TRUE;
+end
+
+function WHP_DawnfallTry(agent Caster, agent Target) is boolean
+declare
+    agent Previous;
+begin
+    if ($WHP_DawnfallEligible(Caster, Target, 0) == FALSE) return FALSE;
+    Previous = Caster's "Target";
+    Caster's "Target" = Target;
+    if ($WHP_DawnfallProviderBegin(Caster, Target)) return TRUE;
+    // Provider false is guaranteed before action dispatch. Never undo a started
+    // attempt: synchronous stock cancellation/retreat owns that state.
+    Caster's "Target" = Previous;
+    return FALSE;
+end
+
+function WHP_DawnfallDecision(agent Caster) is boolean
+declare
+    list Seen;
+    agent Target, Best;
+    integer Score, BestScore;
+begin
+    if ($WHP_DawnfallProviderReady(Caster) != 1) return FALSE;
+    if ($WHP_DawnfallCaster(Caster) == FALSE) return FALSE;
+    Best = $NullAgent();
+    Seen = $List_Enemies_Seen(Caster, #WHP_DawnfallDiscoveryRange);
+    foreach Target in Seen do
+        if ($WHP_DawnfallMarkedTarget(Caster, Target))
+            if ($WHP_DawnfallCanReach(Caster, Target))
+                begin
+                    Score = $WHP_DawnfallTargetScore(Caster, Target, TRUE);
+                    if (Score > BestScore)
+                        begin
+                            Best = Target;
+                            BestScore = Score;
+                        end
+                end
+    if ($IsValidGamePiece(Best) == FALSE) return FALSE;
+    return $WHP_DawnfallTry(Caster, Best);
+end
+
+function WHP_DawnfallFindLair(agent Caster, integer Chance) is boolean
+declare
+    boolean Ignored;
+begin
+    // Stock selection, chance, threat score, reveal and intent remain authoritative.
+    if ($Find_Lair(Caster, Chance) == FALSE) return FALSE;
+    Ignored = $WHP_DawnfallTry(Caster, Caster's "Target");
+    return TRUE;
+end
+
+function WHP_DawnfallCommit(agent Caster, agent Target) is boolean
+declare
+    integer Result;
+begin
+    if ($WHP_DawnfallEligible(Caster, Target, 1) == FALSE) return FALSE;
+    Result = $WHP_DawnfallProviderCommit(Caster, Target);
+    if (Result != 1) return FALSE;
+    // The provider consumed this exact cast before movement. No pre-cast debit.
+    $CreateEffector(Caster, "WHP_DawnfallCooldown", #WHP_DawnfallCooldown);
+    Caster's "ActiveScript" = $Attack_Object;
+    Caster's "Target" = Target;
+    return TRUE;
+end
+
+// Exact void movement callback; policy result is consumer-local only.
+function WHP_DawnfallMove(agent Caster, agent Target)
+declare
+    boolean Ignored;
+begin
+    Ignored = $WHP_DawnfallCommit(Caster, Target);
+end

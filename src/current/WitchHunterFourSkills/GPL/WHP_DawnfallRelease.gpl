@@ -1,0 +1,9 @@
+function WHP_DawnfallRelease(agent thisagent, agent target)
+declare
+    integer theTimePeriod;
+begin
+    theTimePeriod = $GetSpellAttribute("WHP_DawnfallCast", "effector_duration");
+    $createeffector(thisagent, "WHP_DawnfallTransition", theTimePeriod);
+    thisagent's "teleportScript" = $WHP_DawnfallMove;
+    $RunThread(thisagent's "teleportScript", theTimePeriod / 2, thisagent, target);
+end

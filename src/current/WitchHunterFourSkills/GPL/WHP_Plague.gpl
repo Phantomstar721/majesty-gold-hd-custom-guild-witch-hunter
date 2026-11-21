@@ -1,0 +1,124 @@
+// Manager owns the queued charge; the stock timed effector owns cooldown.
+function WHP_PlagueAvailable(agent Building) is boolean
+declare
+begin
+    if ($WHP_Living(Building) == FALSE) return FALSE;
+    if (Building's "Title" != "WHP_SilverWorkshop") return FALSE;
+    if (Building's "Level" < 3) return FALSE;
+    if ($GetAttribute(Building, #ATTRIB_CurrentStageBuilt) == 0) return FALSE;
+    return $MM_WHP_CrucibleHire_Unlocked(Building) != 0;
+end
+
+function WHP_PlagueReady(agent Building) is boolean
+declare
+begin
+    if ($WHP_PlagueAvailable(Building) == FALSE) return FALSE;
+    return $CheckEffector(Building, "WHP_PurgeCooldown") == FALSE;
+end
+
+function WHP_PurgeReady(agent Building) is boolean
+declare
+begin
+    return $WHP_PlagueReady(Building);
+end
+
+function WHP_CleanseReady(agent Building) is boolean
+declare
+begin
+    // The saved charged-action adapter owns the separate start-payment quote.
+    // Already-paid completion must not require another5000gold or5reagents.
+    return $WHP_PlagueReady(Building);
+end
+
+function WHP_CleanseQuote(agent Building) is boolean
+declare
+begin
+    if ($WHP_PlagueReady(Building) == FALSE) return FALSE;
+    return $WHP_RequestPlagueCleanse(Building, 5, FALSE);
+end
+
+function WHP_CleanseStart(agent Building) is boolean
+declare
+begin
+    if ($WHP_PlagueReady(Building) == FALSE) return FALSE;
+    return $WHP_RequestPlagueCleanse(Building, 5, TRUE);
+end
+
+function WHP_CleanseCharged(agent Building)
+declare
+begin
+    // The Manager must validate the saved paid action and initiating owner
+    // before delivery. No payment, affordability or reagent check repeats here.
+    if ($WHP_PlagueReady(Building) == FALSE) return;
+    $WHP_CurePlague(Building);
+    if ($WHP_Living(Building))
+        $CreateEffector(Building, "WHP_PurgeCooldown", 300000);
+end
+
+// Stock all_enemies_dead supplies the complete mobile type query shape.
+// No subtype filter: peasants, guards and caravans are type Hero, subtype Henchman.
+function WHP_PlagueSubjects(agent Building) is list
+declare
+    list Heroes, Monsters, Invisible, Camouflaged, Subjects;
+begin
+    $ListObjects(Building, "hero", -1, Heroes, #MyPlayer, #NoHiddenMap, #InsideOtherUnits);
+    $ListObjects(Building, "monster", -1, Monsters, #MyPlayer, #NoHiddenMap, #InsideOtherUnits);
+    $ListObjects(Building, "Invisible", -1, Invisible, #MyPlayer, #NoHiddenMap, #InsideOtherUnits);
+    $ListObjects(Building, "camouflaged", -1, Camouflaged, #MyPlayer, #NoHiddenMap, #InsideOtherUnits);
+    Subjects = $AddLists(Heroes, Monsters);
+    Subjects = $AddLists(Subjects, Invisible);
+    return $AddLists(Subjects, Camouflaged);
+end
+
+function WHP_IsPlaguedSubject(agent Building, agent Subject) is boolean
+declare
+begin
+    if ($WHP_Living(Building) == FALSE) return FALSE;
+    if ($WHP_Living(Subject) == FALSE) return FALSE;
+    if ($GetUnitPlayerNumber(Subject) != $GetUnitPlayerNumber(Building)) return FALSE;
+    // Revalidate the mobile class after gathering the snapshot.
+    if (Subject's "Type" != "hero" && Subject's "Type" != "monster" &&
+        Subject's "Type" != "Invisible" && Subject's "Type" != "camouflaged") return FALSE;
+    return $CheckEffector(Subject, "Ratman_Plague_Icon");
+end
+
+function WHP_PurgePlague(agent Building)
+declare
+    list Subjects;
+    agent Subject;
+begin
+    // The shared completion adapter must validate the saved initiating owner
+    // and clear the completed queued command before calling this policy.
+    if ($WHP_PurgeReady(Building) == FALSE) return;
+    Subjects = $WHP_PlagueSubjects(Building);
+    foreach Subject in Subjects do
+        if ($WHP_IsPlaguedSubject(Building, Subject))
+            // Stock quest-directed death: let the ordinary native HP/death
+            // lifecycle perform guild, follower and gravestone cleanup.
+            $SetAttribute(Subject, #ATTRIB_HP, 0);
+    // Only successful queued completion reaches here. Cancellation never
+    // applies this lease. Native effector expiry/save state remains authoritative.
+    if ($WHP_Living(Building))
+        $CreateEffector(Building, "WHP_PurgeCooldown", 300000);
+end
+
+function WHP_CurePlague(agent Building)
+declare
+    list Subjects;
+    agent Subject;
+begin
+    Subjects = $WHP_PlagueSubjects(Building);
+    foreach Subject in Subjects do
+        if ($WHP_IsPlaguedSubject(Building, Subject))
+            // Ratman_Plague_End restores penalties and stops PlagueScript.
+            // Cleanse grants no extra immunity and consumes no carried Salts.
+            $DeleteEffector(Subject, "Ratman_Plague_Icon");
+end
+
+// Read the existing native lease. Negative statuses are preserved for UI
+// "unavailable" handling; this callback never changes cooldown or eligibility.
+function WHP_PlagueRechargeRemaining(agent Building) is integer
+declare
+begin
+    return $MM_EffectorRemaining(Building, "WHP_PurgeCooldown");
+end

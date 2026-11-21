@@ -1,0 +1,19 @@
+// Guild policy only; Manager owns selection, travel, entry and consumption.
+function WHP_CrucibleHireEligible(agent Hero, agent Building) is boolean
+declare
+begin
+    if ($WHP_Living(Building) == FALSE) return FALSE;
+    if (Building's "Title" != "WHP_SilverWorkshop") return FALSE;
+    if ($WHP_HeroLevel(Hero,8) == FALSE) return FALSE;
+    if (Hero's "Type" != "hero") return FALSE;
+    if (Hero's "Title" != "Witch_Hunter_Prototype") return FALSE;
+    return $GetUnitPlayerNumber(Hero) == $GetUnitPlayerNumber(Building);
+end
+
+function WHP_CrucibleHireCleanup(agent Hero, agent Building)
+declare
+begin
+    // This existing helper only retires Hunter lifetime/quarry/shot ownership.
+    // It does not kill the hero, run gravestone effects or alter guild lists.
+    $WHP_HunterDeath(Hero);
+end

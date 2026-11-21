@@ -1,0 +1,8 @@
+[WHP_BreachSpell]
+	{Spell
+		(type		spell)
+		(subtype	spell)
+		(title		WHP_BreachSpell)
+		(activeScript	Farseeing_Active)
+	}
+[end]

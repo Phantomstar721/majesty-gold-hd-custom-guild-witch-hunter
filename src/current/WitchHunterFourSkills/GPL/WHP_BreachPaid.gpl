@@ -1,0 +1,67 @@
+// MMCR22/v3 post-payment callback. Native stock executor owns every gold debit.
+function WHP_BreachHostile(agent Source, agent Target) is boolean
+declare
+    list Lairs;
+begin
+    if ($WHP_Living(Source) == FALSE) return FALSE;
+    if ($WHP_Living(Target) == FALSE) return FALSE;
+    if (Target's "Type" != "Lair") return FALSE;
+    if ($InsideBuilding(Target)) return FALSE;
+    $ListObjects(Source, "Lair", -1, Lairs, #NotMyTeam);
+    return $AgentInList(Target, Lairs);
+end
+
+// Stock Farseeing unit timeout lifecycle; no damage/reveal or active thread.
+function WHP_BreachVisualBirth(agent Spell, agent Target)
+declare
+begin
+    $SetSpellUnitTimeout(Spell, 2500);
+end
+
+function WHP_BreachPaid(agent Spell, agent SourceBuilding, agent ClickedTarget)
+declare
+    integer Player, CompletedLevel;
+begin
+    if ($IsValidGamePiece(Spell) == FALSE) return;
+    $SetSpellUnitTimeout(Spell, 2500);
+    if ($HasAttribute("WHP_BreachDelivered", Spell))
+        if (Spell's "WHP_BreachDelivered") return;
+    if ($WHP_Living(SourceBuilding) == FALSE) return;
+    if (SourceBuilding's "Type" != "Building") return;
+    if (SourceBuilding's "Title" != "WHP_Chapterhouse") return;
+    if ($InsideBuilding(SourceBuilding)) return;
+    // Stock primary stage semantics: an unfinished upgrade retains its prior tier.
+    CompletedLevel = SourceBuilding's "Level";
+    if ($GetAttribute(SourceBuilding, #ATTRIB_CurrentStageBuilt) == 0) CompletedLevel -= 1;
+    if (CompletedLevel < 2) return;
+    if ($GetAttribute(SourceBuilding, #ATTRIB_FirstStageBuilt) == 0) return;
+    Player = $GetUnitPlayerNumber(SourceBuilding);
+    if ($GetUnitPlayerNumber(Spell) != Player) return;
+    if ($WHP_BreachHostile(SourceBuilding, ClickedTarget) == FALSE) return;
+    // Consume the delivery before effect callbacks. No GPL payment/refund.
+    if ($HasAttribute("WHP_BreachDelivered", Spell) == FALSE)
+        $AddAttribute(Spell, "WHP_BreachDelivered", "boolean", FALSE);
+    Spell's "WHP_BreachDelivered" = TRUE;
+    if ($HasAttribute("WHP_BreachPlayer", ClickedTarget) == FALSE)
+        $AddAttribute(ClickedTarget, "WHP_BreachPlayer", "integer", -1);
+    if ($HasAttribute("WHP_BreachTargetPlayer", ClickedTarget) == FALSE)
+        $AddAttribute(ClickedTarget, "WHP_BreachTargetPlayer", "integer", -1);
+    if ($CheckEffector(ClickedTarget, "WHP_Breach"))
+        $DeleteEffector(ClickedTarget, "WHP_Breach");
+    ClickedTarget's "WHP_BreachPlayer" = Player;
+    ClickedTarget's "WHP_BreachTargetPlayer" = $GetUnitPlayerNumber(ClickedTarget);
+    $CreateEffector(ClickedTarget, "WHP_Breach", #WHP_BreachDuration);
+end
+
+// Window Engine SHOWIF query: native action handlers still own the actual row.
+function WHP_BreachFrameVisible(agent Building, integer Player) is integer
+declare
+    integer CompletedLevel;
+begin
+    if ($IsValidGamePiece(Building) == FALSE) return 0;
+    if ($GetAttribute(Building, #ATTRIB_FirstStageBuilt) == 0) return 0;
+    CompletedLevel = Building's "Level";
+    if ($GetAttribute(Building, #ATTRIB_CurrentStageBuilt) == 0) CompletedLevel -= 1;
+    if (CompletedLevel >= 2) return 1;
+    return 0;
+end

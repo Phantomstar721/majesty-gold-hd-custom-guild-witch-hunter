@@ -1,0 +1,534 @@
+// Isolated four-skill candidate. Tunings are provisional, not release balance.
+// Stock duration-owned effectors and GPL serialization own persistent state.
+// Individual hero levels; building upgrades never substitute for experience.
+function WHP_HeroLevel(agent Hunter, integer Required) is boolean
+declare
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return FALSE;
+    if ($WHP_Living(Hunter) == FALSE) return FALSE;
+    return ($GetAttribute(Hunter, #ATTRIB_ExperienceLevel) >= Required);
+end
+
+function WHP_IsHunter(agent Hunter) is boolean
+declare
+begin
+    if ($IsValidGamePiece(Hunter) == FALSE) return FALSE;
+    if ($HasAttribute("WHP_Prototype", Hunter) == FALSE) return FALSE;
+    return Hunter's "WHP_Prototype";
+end
+
+function WHP_Living(agent Unit) is boolean
+declare
+begin
+    if ($IsValidGamePiece(Unit) == FALSE) return FALSE;
+    if ($IsDead(Unit)) return FALSE;
+    return ($GetAttribute(Unit, #ATTRIB_HP) > 0);
+end
+
+function WHP_OwnsMark(agent Hunter, agent Target) is boolean
+declare
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return FALSE;
+    if ($WHP_Living(Hunter) == FALSE) return FALSE;
+    if ($WHP_Living(Target) == FALSE) return FALSE;
+    if ($HasAttribute("WHP_Quarry", Hunter) == FALSE) return FALSE;
+    if (Hunter's "WHP_Quarry" != Target) return FALSE;
+    if (Hunter's "Target" != Target) return FALSE;
+    if (Hunter's "WHP_Player" != $GetUnitPlayerNumber(Hunter)) return FALSE;
+    if (Hunter's "WHP_TargetPlayer" != $GetUnitPlayerNumber(Target)) return FALSE;
+    if ($InsideBuilding(Hunter)) return FALSE;
+    if (Hunter's "WHP_MarkLive" == FALSE) return FALSE;
+    if ($CheckEffector(Target, "WHP_Mark") == FALSE) return FALSE;
+    return $CheckEffector(Hunter, "WHP_MarkLease");
+end
+
+function WHP_MarkEnd(agent Target)
+declare
+    integer Dodge, Parry;
+begin
+    $WHP_ClearMarkSlow(Target);
+    if ($HasAttribute("WHP_MarkDodge", Target) == FALSE) return;
+    Dodge = Target's "WHP_MarkDodge";
+    Parry = Target's "WHP_MarkParry";
+    Target's "WHP_MarkDodge" = 0;
+    Target's "WHP_MarkParry" = 0;
+    $MagicalAdjustAttribute(Target, #ATTRIB_Dodge, Dodge);
+    $MagicalAdjustAttribute(Target, #ATTRIB_Parry, Parry);
+end
+
+function WHP_MarkActive(agent Target) is boolean
+declare
+    list Kept;
+    agent Hunter;
+    integer Index;
+begin
+    if ($IsValidGamePiece(Target) == FALSE) return FALSE;
+    if ($HasAttribute("WHP_MarkOwners", Target) == FALSE) return FALSE;
+    Index = 1;
+    while (Index <= $ListSize(Target's "WHP_MarkOwners")) do
+        begin
+            Hunter = $ListMember(Target's "WHP_MarkOwners", Index);
+            if ($WHP_OwnsMark(Hunter, Target)) Kept << Hunter;
+            Index += 1;
+        end
+    Target's "WHP_MarkOwners" = Kept;
+    $WHP_SyncMarkSlow(Target);
+    if ($ListSize(Kept) > 0) return TRUE;
+    if ($CheckEffector(Target, "WHP_Mark")) $DeleteEffector(Target, "WHP_Mark");
+    return FALSE;
+end
+
+function WHP_LeaseEnd(agent Hunter)
+declare
+    agent Previous;
+    boolean Ignored;
+begin
+    if ($HasAttribute("WHP_Quarry", Hunter) == FALSE) return;
+    Previous = Hunter's "WHP_Quarry";
+    // Callback can run while the native effect is still discoverable.
+    Hunter's "WHP_MarkLive" = FALSE;
+    if ($IsValidGamePiece(Previous)) Ignored = $WHP_MarkActive(Previous);
+end
+
+function WHP_ClearHunter(agent Hunter)
+declare
+    agent Previous;
+    boolean Ignored;
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    if ($HasAttribute("WHP_Quarry", Hunter) == FALSE) return;
+    Previous = Hunter's "WHP_Quarry";
+    Hunter's "WHP_Quarry" = $NullAgent();
+    Hunter's "WHP_MarkLive" = FALSE;
+    Hunter's "WHP_Epoch" += 1;
+    if ($CheckEffector(Hunter, "WHP_MarkLease")) $DeleteEffector(Hunter, "WHP_MarkLease");
+    if ($IsValidGamePiece(Previous)) Ignored = $WHP_MarkActive(Previous);
+end
+
+function WHP_SyncQuarry(agent Hunter, agent Target)
+declare
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    if ($HasAttribute("WHP_LifeEpoch", Hunter) == FALSE)
+        $AddAttribute(Hunter, "WHP_LifeEpoch", "integer", 0);
+    if ($HasAttribute("WHP_Quarry", Hunter) == FALSE)
+        begin
+            $AddAttribute(Hunter, "WHP_Quarry", "agentref", $NullAgent());
+            $AddAttribute(Hunter, "WHP_MarkLive", "boolean", FALSE);
+            $AddAttribute(Hunter, "WHP_Epoch", "integer", 0);
+            $AddAttribute(Hunter, "WHP_Player", "integer", -1);
+            $AddAttribute(Hunter, "WHP_TargetPlayer", "integer", -1);
+        end
+    if ($WHP_Living(Target) == FALSE)
+        begin
+            $WHP_ClearHunter(Hunter);
+            return;
+        end
+    if ((Hunter's "WHP_Quarry" != Target) ||
+        (Hunter's "WHP_Player" != $GetUnitPlayerNumber(Hunter)) ||
+        (Hunter's "WHP_TargetPlayer" != $GetUnitPlayerNumber(Target)))
+        begin
+            if (Hunter's "WHP_Player" != $GetUnitPlayerNumber(Hunter)) Hunter's "WHP_LifeEpoch" += 1;
+            $WHP_ClearHunter(Hunter);
+            Hunter's "WHP_Quarry" = Target;
+            Hunter's "WHP_Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_TargetPlayer" = $GetUnitPlayerNumber(Target);
+        end
+end
+
+function WHP_MarkHit(agent Hunter, agent Target)
+declare
+    boolean Existing;
+    integer Dodge, Parry;
+begin
+    if ($WHP_HeroLevel(Hunter, 1) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return;
+    if ($HasAttribute("WHP_MarkOwners", Target) == FALSE)
+        begin
+            $AddAttribute(Target, "WHP_MarkOwners", "list");
+            $AddAttribute(Target, "WHP_MarkDodge", "integer", 0);
+            $AddAttribute(Target, "WHP_MarkParry", "integer", 0);
+        end
+    Existing = $WHP_MarkActive(Target);
+    if ($AgentInList(Hunter, Target's "WHP_MarkOwners") == FALSE)
+        Target's "WHP_MarkOwners" << Hunter;
+    $CreateEffector(Hunter, "WHP_MarkLease", 12000);
+    Hunter's "WHP_MarkLive" = TRUE;
+    $CreateEffector(Target, "WHP_Mark", 12000);
+    if ($WHP_HasFitting(Hunter, "WHP_Gravebind"))
+        $CreateEffector(Target, "WHP_GravebindSlow", 12000);
+    if (Existing == FALSE)
+        begin
+            Dodge = $GetAttribute(Target, #ATTRIB_Dodge);
+            Parry = $GetAttribute(Target, #ATTRIB_Parry);
+            if (Dodge > 10) Dodge = 10;
+            if (Parry > 10) Parry = 10;
+            if (Dodge < 0) Dodge = 0;
+            if (Parry < 0) Parry = 0;
+            Target's "WHP_MarkDodge" = Dodge;
+            Target's "WHP_MarkParry" = Parry;
+            $MagicalAdjustAttribute(Target, #ATTRIB_Dodge, -Dodge);
+            $MagicalAdjustAttribute(Target, #ATTRIB_Parry, -Parry);
+        end
+end
+
+
+
+function WHP_SunderEnd(agent Target)
+declare
+begin
+    if ($HasAttribute("WHP_SunderPercent", Target))
+        begin
+            Target's "WHP_SunderPercent" = 0;
+            Target's "WHP_SunderSource" = $NullAgent();
+        end
+end
+
+function WHP_SunderValid(agent Target) is boolean
+declare
+    agent Source;
+begin
+    if ($HasAttribute("WHP_SunderSource", Target) == FALSE) return FALSE;
+    Source = Target's "WHP_SunderSource";
+    if ($WHP_Living(Source) == FALSE) return FALSE;
+    if ($GetUnitPlayerNumber(Source) != Target's "WHP_SunderPlayer") return FALSE;
+    if ($GetUnitPlayerNumber(Target) != Target's "WHP_SunderTargetPlayer") return FALSE;
+    if ($HasAttribute("WHP_LifeEpoch", Source))
+        begin
+            if ($HasAttribute("WHP_SunderLifeEpoch", Target) == FALSE) return FALSE;
+            if (Target's "WHP_SunderLifeEpoch" != Source's "WHP_LifeEpoch") return FALSE;
+        end
+    return TRUE;
+end
+
+function WHP_SunderHit(agent Hunter, agent Target)
+declare
+    integer Percent;
+begin
+    if ($WHP_HeroLevel(Hunter, 5) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return;
+    if (Hunter's "AttackType" == 2)
+        begin
+            $WHP_SunderingHit(Hunter, Target);
+            return;
+        end
+    if (Hunter's "AttackType" != 1) return;
+    Percent = 25;
+    if ($WHP_StrikeAllowed(Target, Percent, FALSE) == FALSE) return;
+    if ($HasAttribute("WHP_SunderPercent", Target) == FALSE)
+        begin
+            $AddAttribute(Target, "WHP_SunderPercent", "integer", 0);
+            $AddAttribute(Target, "WHP_SunderSource", "agentref", $NullAgent());
+            $AddAttribute(Target, "WHP_SunderPlayer", "integer", -1);
+            $AddAttribute(Target, "WHP_SunderTargetPlayer", "integer", -1);
+        end
+    if ($CheckEffector(Target, "WHP_Sunder"))
+        begin
+            if ($WHP_SunderValid(Target))
+                begin
+                    if (Target's "WHP_SunderPercent" > Percent) return;
+                end
+            else $DeleteEffector(Target, "WHP_Sunder");
+        end
+    Target's "WHP_SunderPercent" = Percent;
+    Target's "WHP_SunderSource" = Hunter;
+    Target's "WHP_SunderPlayer" = $GetUnitPlayerNumber(Hunter);
+    Target's "WHP_SunderTargetPlayer" = $GetUnitPlayerNumber(Target);
+    if ($HasAttribute("WHP_SunderLifeEpoch", Target) == FALSE)
+        $AddAttribute(Target, "WHP_SunderLifeEpoch", "integer", -1);
+    Target's "WHP_SunderLifeEpoch" = -1;
+    if ($HasAttribute("WHP_LifeEpoch", Hunter)) Target's "WHP_SunderLifeEpoch" = Hunter's "WHP_LifeEpoch";
+    $CreateEffector(Target, "WHP_Sunder", 6000);
+end
+
+
+
+function WHP_DirectDamage(agent Attacker, agent Defender, integer Amount) is integer
+declare
+begin
+    return $WHP_DamageWithFloor(Attacker, Defender, Amount, 0);
+end
+
+function WHP_DamageWithFloor(agent Attacker, agent Defender, integer Amount, integer Percent) is integer
+declare
+begin
+    return $WHP_WardDamage(Defender, $WHP_StatusDamage(Attacker, Defender, Amount, Percent));
+end
+
+function WHP_AfterDirectDamage(agent Attacker, agent Defender, integer Before)
+declare
+begin
+    if ($WHP_HeroLevel(Defender, 8) == FALSE) return;
+    if ($WHP_IsHunter(Defender) == FALSE) return;
+    if ($WHP_Living(Defender) == FALSE) return;
+    if ($GetAttribute(Defender, #ATTRIB_HP) >= Before) return;
+    if ($WHP_OwnsMark(Defender, Attacker) == FALSE) return;
+    if ($CheckEffector(Defender, "WHP_Ward")) return;
+    if ($CheckEffector(Defender, "WHP_WardCooldown")) return;
+    // Already debited hit never receives this newly-created reduction.
+    if ($HasAttribute("WHP_WardResistance", Defender) == FALSE)
+        $AddAttribute(Defender, "WHP_WardResistance", "integer", 0);
+    $CreateEffector(Defender, "WHP_Ward", 6000);
+    Defender's "WHP_WardResistance" = 20;
+    $MagicalAdjustAttribute(Defender, #ATTRIB_MagicResistance, 20);
+    $CreateEffector(Defender, "WHP_WardCooldown", 12000);
+end
+
+function WHP_BurnEnd(agent Target)
+declare
+begin
+    if ($HasAttribute("WHP_BurnTicks", Target) == FALSE) return;
+    Target's "WHP_BurnTicks" = 0;
+    Target's "WHP_BurnSource" = $NullAgent();
+    $KillThread(Target's "WHP_BurnScript");
+end
+
+function WHP_BurnTick(agent Target)
+declare
+    agent Source;
+begin
+    if ($WHP_Living(Target) == FALSE)
+        begin
+            if ($IsValidGamePiece(Target))
+                if ($CheckEffector(Target, "WHP_Burn")) $DeleteEffector(Target, "WHP_Burn");
+            return;
+        end
+    if ($CheckEffector(Target, "WHP_Burn") == FALSE) return;
+    Source = Target's "WHP_BurnSource";
+    if ($WHP_Living(Source) == FALSE)
+        begin
+            $DeleteEffector(Target, "WHP_Burn");
+            return;
+        end
+    if (($GetUnitPlayerNumber(Source) != Target's "WHP_BurnPlayer") ||
+        ($GetUnitPlayerNumber(Target) != Target's "WHP_BurnTargetPlayer"))
+        begin
+            $DeleteEffector(Target, "WHP_Burn");
+            return;
+        end
+    if ($HasAttribute("WHP_LifeEpoch", Source))
+        if (Source's "WHP_LifeEpoch" != Target's "WHP_BurnLifeEpoch")
+            begin
+                $DeleteEffector(Target, "WHP_Burn");
+                return;
+            end
+    if (Target's "WHP_BurnTicks" <= 0)
+        begin
+            $DeleteEffector(Target, "WHP_Burn");
+            return;
+        end
+    Target's "WHP_BurnTicks" = Target's "WHP_BurnTicks" - 1;
+    // Deliberately not poison or a direct resolver; cannot activate Ward.
+    $AdjustAttribute(Target, #ATTRIB_HP, -$WHP_StatusDamage(Source, Target, $WHP_BurnPotency(Target), 0));
+    if (Target's "WHP_BurnTicks" <= 0) $DeleteEffector(Target, "WHP_Burn");
+end
+
+function WHP_SilverHit(agent Hunter, agent Target)
+declare
+begin
+    $WHP_SilverPayloadHit(Hunter, Target, #WHP_BurnBase);
+end
+
+function WHP_SilverPayloadHit(agent Hunter, agent Target, integer Potency)
+declare
+    boolean Existing, Stripped;
+    string Preferred, Fallback;
+begin
+    if ($WHP_HeroLevel(Hunter, 3) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    // Build-time priority from silver-tuning.json; retain stock owning callbacks.
+    Preferred = "magic_mirror_icon";
+    Fallback = "Damage_Shield";
+    Stripped = FALSE;
+    if ($CheckEffector(Target, Preferred))
+        begin
+            $DeleteEffector(Target, Preferred);
+            Stripped = TRUE;
+        end
+    else
+        if ($CheckEffector(Target, Fallback))
+            begin
+                $DeleteEffector(Target, Fallback);
+                Stripped = TRUE;
+            end
+    // Native owning-overlay callbacks clear stock flags exactly once.
+    // Approved: removing a protection adds no separate HP debit.
+    if ($WHP_Living(Target) == FALSE) return;
+    if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return;
+    $WHP_SetBurn(Hunter, Target, Potency, #WHP_BurnTicks, TRUE);
+end
+
+function WHP_Noop(agent Unit)
+declare
+begin
+end
+
+function WHP_SunderingEnd(agent Target)
+declare
+begin
+    if ($HasAttribute("WHP_SunderingPercent", Target))
+        begin
+            Target's "WHP_SunderingPercent" = 0;
+            Target's "WHP_SunderingSource" = $NullAgent();
+        end
+end
+
+function WHP_SunderingValid(agent Target) is boolean
+declare
+    agent Source;
+begin
+    if ($HasAttribute("WHP_SunderingSource", Target) == FALSE) return FALSE;
+    Source = Target's "WHP_SunderingSource";
+    if ($WHP_Living(Source) == FALSE) return FALSE;
+    if ($GetUnitPlayerNumber(Source) != Target's "WHP_SunderingPlayer") return FALSE;
+    if ($GetUnitPlayerNumber(Target) != Target's "WHP_SunderingTargetPlayer") return FALSE;
+    if ($HasAttribute("WHP_LifeEpoch", Source))
+        begin
+            if ($HasAttribute("WHP_SunderingLifeEpoch", Target) == FALSE) return FALSE;
+            if (Target's "WHP_SunderingLifeEpoch" != Source's "WHP_LifeEpoch") return FALSE;
+        end
+    return TRUE;
+end
+
+function WHP_SunderingHit(agent Hunter, agent Target)
+declare
+    integer Percent;
+begin
+    if ($WHP_HeroLevel(Hunter, 5) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return;
+    if (Hunter's "AttackType" != 2) return;
+    Percent = 25;
+    if ($WHP_StrikeAllowed(Target, Percent, TRUE) == FALSE) return;
+    if ($HasAttribute("WHP_SunderingPercent", Target) == FALSE)
+        begin
+            $AddAttribute(Target, "WHP_SunderingPercent", "integer", 0);
+            $AddAttribute(Target, "WHP_SunderingSource", "agentref", $NullAgent());
+            $AddAttribute(Target, "WHP_SunderingPlayer", "integer", -1);
+            $AddAttribute(Target, "WHP_SunderingTargetPlayer", "integer", -1);
+        end
+    if ($CheckEffector(Target, "WHP_SunderingShot"))
+        begin
+            if ($WHP_SunderingValid(Target))
+                begin
+                    if (Target's "WHP_SunderingPercent" > Percent) return;
+                end
+            else $DeleteEffector(Target, "WHP_SunderingShot");
+        end
+    Target's "WHP_SunderingPercent" = Percent;
+    Target's "WHP_SunderingSource" = Hunter;
+    Target's "WHP_SunderingPlayer" = $GetUnitPlayerNumber(Hunter);
+    Target's "WHP_SunderingTargetPlayer" = $GetUnitPlayerNumber(Target);
+    if ($HasAttribute("WHP_SunderingLifeEpoch", Target) == FALSE)
+        $AddAttribute(Target, "WHP_SunderingLifeEpoch", "integer", -1);
+    Target's "WHP_SunderingLifeEpoch" = -1;
+    if ($HasAttribute("WHP_LifeEpoch", Hunter)) Target's "WHP_SunderingLifeEpoch" = Hunter's "WHP_LifeEpoch";
+    $CreateEffector(Target, "WHP_SunderingShot", 6000);
+end
+
+
+function WHP_StatusDamage(agent Attacker, agent Defender, integer Amount, integer Percent) is integer
+declare
+    integer Incoming;
+begin
+    if (Amount <= 0) return 0;
+    if ($IsValidGamePiece(Attacker))
+        if ($CheckEffector(Attacker, "WHP_Sunder"))
+            if ($HasAttribute("WHP_SunderPercent", Attacker))
+                begin
+                    if ($WHP_SunderValid(Attacker))
+                        begin
+                            if (Attacker's "WHP_SunderPercent" > Percent) Percent = Attacker's "WHP_SunderPercent";
+                        end
+                    else $DeleteEffector(Attacker, "WHP_Sunder");
+                end
+    Incoming = 100;
+    if ($IsValidGamePiece(Defender))
+        if ($CheckEffector(Defender, "WHP_SunderingShot"))
+            begin
+                if ($WHP_SunderingValid(Defender)) Incoming = 125;
+                else $DeleteEffector(Defender, "WHP_SunderingShot");
+            end
+    // One division avoids rounding twice when both nonstacking statuses apply.
+    return (Amount * (100 - Percent) * Incoming) / 10000;
+end
+
+function WHP_WardDamage(agent Defender, integer Amount) is integer
+declare
+begin
+    if (Amount <= 0) return 0;
+    if ($WHP_IsHunter(Defender))
+        if ($CheckEffector(Defender, "WHP_Ward")) Amount = (Amount * 70) / 100;
+    return Amount;
+end
+
+function WHP_WardEnd(agent Hunter)
+declare
+    integer Bonus;
+begin
+    // Stock Resist_Magic_End: reverse the matching magical attribute adjustment.
+    // Legacy saves may contain an old Ward that never awarded resistance.
+    if ($HasAttribute("WHP_WardResistance", Hunter) == FALSE) return;
+    Bonus = Hunter's "WHP_WardResistance";
+    Hunter's "WHP_WardResistance" = 0;
+    if (Bonus != 0) $MagicalAdjustAttribute(Hunter, #ATTRIB_MagicResistance, -Bonus);
+end
+
+// Both weapon strikes share a strongest-effect slot on this target.
+// Native effector End callbacks clear the replaced source and percentage.
+function WHP_StrikeAllowed(agent Target, integer Percent, boolean Ranged) is boolean
+declare
+    integer Weakening, Sundering;
+begin
+    Weakening = 0;
+    Sundering = 0;
+    if ($CheckEffector(Target, "WHP_Sunder"))
+        begin
+            if ($WHP_SunderValid(Target))
+                begin
+                    if ($HasAttribute("WHP_SunderPercent", Target))
+                        Weakening = Target's "WHP_SunderPercent";
+                end
+            else $DeleteEffector(Target, "WHP_Sunder");
+        end
+    if ($CheckEffector(Target, "WHP_SunderingShot"))
+        begin
+            if ($WHP_SunderingValid(Target))
+                begin
+                    if ($HasAttribute("WHP_SunderingPercent", Target))
+                        Sundering = Target's "WHP_SunderingPercent";
+                end
+            else $DeleteEffector(Target, "WHP_SunderingShot");
+        end
+    if ((Weakening > Percent) || (Sundering > Percent))
+        begin
+            // Also retire the loser if an older save already carries both.
+            // Keep the winner's existing native expiry; a weaker hit cannot renew it.
+            if (Sundering > Weakening)
+                begin
+                    if ($CheckEffector(Target, "WHP_Sunder"))
+                        $DeleteEffector(Target, "WHP_Sunder");
+                end
+            else
+                begin
+                    if ($CheckEffector(Target, "WHP_SunderingShot"))
+                        $DeleteEffector(Target, "WHP_SunderingShot");
+                end
+            return FALSE;
+        end
+    // An equal or stronger new hit replaces the other strike, then the caller
+    // assigns the existing ownership fields and creates/renews its six-second lease.
+    if (Ranged)
+        begin
+            if ($CheckEffector(Target, "WHP_Sunder"))
+                $DeleteEffector(Target, "WHP_Sunder");
+        end
+    else
+        begin
+            if ($CheckEffector(Target, "WHP_SunderingShot"))
+                $DeleteEffector(Target, "WHP_SunderingShot");
+        end
+    return TRUE;
+end

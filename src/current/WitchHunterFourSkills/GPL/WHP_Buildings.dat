@@ -1,0 +1,88 @@
+[WHP_Chapterhouse1]
+	{Guild
+		(type 			building)
+		(subtype 		Guild)
+		(title 			WHP_Chapterhouse)
+		(member_title 		Witch_Hunter_Prototype)
+		(member_basicscript 	WHP_HunterTree)
+		(Lived_In_Script	Lived_In)
+		(Sleep_for		30000)
+		(birthscript		basic_birth)
+		(birthScript2		Guild_Birth)
+		(IGdeathscript		guild_destroyed_a)
+		(Level 1)
+		(upgradescript basic_upgrade)
+	}
+[end]
+
+[WHP_SilverWorkshop1]
+	{Building
+		(type 			building)
+		(subtype 		xx)
+		(title 			WHP_SilverWorkshop)
+		(Level			1)
+		(Visited_Script		WHP_WorkshopVisited)
+		(birthscript		basic_birth)
+		(birthScript2		Building_Birth)
+		(IGdeathscript		building_death)
+		(upgradescript		basic_upgrade)
+	}
+[end]
+
+[WHP_Chapterhouse2]
+	{Guild
+		(type 			building)
+		(subtype 		Guild)
+		(title 			WHP_Chapterhouse)
+		(member_title 		Witch_Hunter_Prototype)
+		(member_basicscript 	WHP_HunterTree)
+		(Lived_In_Script	Lived_In)
+		(Sleep_for		30000)
+		(birthscript		Guild_Birth)
+
+		(IGdeathscript		guild_destroyed_a)
+		(Level 2)
+		(upgradescript basic_upgrade)
+	}
+[end]
+
+[WHP_SilverWorkshop2]
+	{Building
+		(type 			building)
+		(subtype 		xx)
+		(title 			WHP_SilverWorkshop)
+		(Level			2)
+		(Visited_Script		WHP_WorkshopVisited)
+		(birthScript		Building_Birth)
+		(IGdeathscript		building_death)
+		(upgradescript		basic_upgrade)
+	}
+[end]
+
+[WHP_Chapterhouse3]
+	{Guild
+		(type 			building)
+		(subtype 		Guild)
+		(title 			WHP_Chapterhouse)
+		(member_title 		Witch_Hunter_Prototype)
+		(member_basicscript 	WHP_HunterTree)
+		(Lived_In_Script	Lived_In)
+		(Sleep_for		30000)
+		(birthscript		Guild_Birth)
+
+		(IGdeathscript		guild_destroyed_a)
+		(Level 3)
+	}
+[end]
+
+[WHP_SilverWorkshop3]
+	{Building
+		(type 			building)
+		(subtype 		xx)
+		(title 			WHP_SilverWorkshop)
+		(Level			3)
+		(Visited_Script		WHP_WorkshopVisited)
+		(birthScript		Building_Birth)
+		(IGdeathscript		building_death)
+	}
+[end]

@@ -1,0 +1,492 @@
+function attack_object(agent thisagent)
+
+declare
+	integer targetrange,attackrange;
+	agent target;
+	string spell_name;
+	boolean casting;
+
+begin
+    target = thisagent's "target";
+    if ($HasAttribute("WHP_Prototype",thisagent))
+        if (thisagent's "WHP_Prototype")
+            begin
+                $WHP_attack_object(thisagent);
+                return;
+            end
+
+
+	// is target still valid
+	if ($notvalid(target))
+		begin
+			$reset_tasks(thisagent);
+		end
+	else
+		begin
+			// is thisagent low on HP
+			if ($haslowHP(thisagent))
+				begin
+					$heal_self(thisagent);
+				end
+			else
+				begin
+					// pick a weapon to use - a spell or regular weapon
+					spell_name = $getbestspell(thisagent,#list_attack);
+
+					if (spell_name == "nothing")
+						begin
+							attackrange = $getattribute(thisagent,#ATTRIB_maxattackrange);
+							casting = FALSE;
+						end
+					else
+						begin
+							attackrange = thisagent's "castingrange";
+							casting = TRUE;
+						end
+
+					// combat prep module
+
+					// is thiaagent in attackrange of target
+					targetrange = $distanceBetweenAgents(thisagent,target);
+
+					if (targetrange > attackrange)
+						begin
+							// move towards target
+							thisagent's "destination" = $locationof(target);
+							thisagent's "activeScript" = $travel_to;
+							thisagent's "backScript" = $attack_object;
+							$move(thisagent,target);
+						end
+					else
+						begin
+							// is target within min attack range? - later
+							if (($listsize(thisagent's "hostiles") > 0) && ((target's "type" == "building") || (target's "type") == "lair"))
+								begin
+									//$eval_enemies_nearby(thisagent);
+									(thisagent's "evaluationscript") (thisagent);
+								end
+							else
+								begin
+									if ($Hero_Peasant_check(thisagent) == FALSE)
+									// make attack on object
+									if (casting)
+										begin
+											$PlaySound (ThisAgent, "VFX_CAST_SPELL1");
+
+											$castspell(thisagent,spell_name,target, "");
+										end
+									else
+										$performAction(thisagent,(thisagent's "attack_action"),target);
+								end
+						end
+				end
+		end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+function WHP_attack_object(agent thisagent)
+
+declare
+	integer targetrange,attackrange;
+	agent target;
+	string spell_name;
+	boolean casting, WeaponReady;
+
+begin
+    WeaponReady = TRUE;
+    $WHP_SyncQuarry(thisagent,thisagent's "Target");
+	target = thisagent's "target";
+
+
+
+	// is target still valid
+	if ($notvalid(target))
+		begin
+			$reset_tasks(thisagent);
+		end
+	else
+		begin
+			// is thisagent low on HP
+			if ($haslowHP(thisagent))
+				begin
+					$heal_self(thisagent);
+				end
+			else
+				begin
+					// pick a weapon to use - a spell or regular weapon
+					spell_name = $getbestspell(thisagent,#list_attack);
+
+					if (spell_name == "nothing")
+						begin
+							WeaponReady = $WHP_PrepareWeapon(thisagent,target);
+
+							attackrange = $getattribute(thisagent,#ATTRIB_maxattackrange);
+							casting = FALSE;
+						end
+					else
+						begin
+							attackrange = thisagent's "castingrange";
+							casting = TRUE;
+						end
+
+					// combat prep module
+
+					// is thiaagent in attackrange of target
+					targetrange = $distanceBetweenAgents(thisagent,target);
+
+					if (targetrange > attackrange)
+						begin
+							// move towards target
+							thisagent's "destination" = $locationof(target);
+							thisagent's "activeScript" = $travel_to;
+							thisagent's "backScript" = $attack_object;
+							$move(thisagent,target);
+						end
+					else
+						begin
+							// is target within min attack range? - later
+							if (($listsize(thisagent's "hostiles") > 0) && ((target's "type" == "building") || (target's "type") == "lair"))
+								begin
+									//$eval_enemies_nearby(thisagent);
+									(thisagent's "evaluationscript") (thisagent);
+								end
+							else
+								begin
+									if ($Hero_Peasant_check(thisagent) == FALSE)
+									// make attack on object
+									if (casting)
+										begin
+											$PlaySound (ThisAgent, "VFX_CAST_SPELL1");
+
+											$castspell(thisagent,spell_name,target, "");
+										end
+									else
+										if (WeaponReady)
+                                    $performAction(thisagent,(thisagent's "attack_action"),target);
+								end
+						end
+				end
+		end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+function berserk(agent thisagent)
+
+declare
+	integer targetrange,attackrange;
+	agent target;
+	string spell_name;
+	boolean casting;
+
+
+begin
+    if (thisagent's "title" == "Witch_Hunter_Prototype")
+    if ($HasAttribute("WHP_Prototype",thisagent))
+        if (thisagent's "WHP_Prototype")
+            begin
+                $WHP_berserk(thisagent);
+                return;
+            end
+	target = thisagent's "target";
+
+	if ($haslowHP(thisagent) == FALSE)
+		begin
+			// return to normal decisions
+//			thisagent's "activescript" = thisagent's "basicscript";
+			$reset_tasks(thisagent);
+		end
+	else
+		if ($isspellavailable(thisagent,"healer_heal"))
+			begin
+				$castspell(thisagent,"healer_heal",thisagent,"");
+				return;
+			end
+
+		if ($notvalid(thisagent's "target"))
+			begin
+				// pick new target
+				$list_enemies(thisagent,1);
+				if ($listsize(thisagent's "Hostiles") > 0)
+					begin
+						thisagent's "target" = $pick_closest(thisagent,thisagent's "Hostiles");
+					end
+				else
+					begin
+						// no more enemies to fight!
+						//$flee_berserk(thisagent);
+						$reset_tasks(thisagent);
+
+					end
+			end
+		else
+			begin
+				// pick a weapon to use - a spell or regular weapon
+				spell_name = $getbestspell(thisagent,#list_attack);
+
+				if (spell_name == "nothing")
+					begin
+						attackrange = $getattribute(thisagent,#ATTRIB_maxattackrange);
+						casting = FALSE;
+					end
+				else
+					begin
+						attackrange = thisagent's "castingrange";
+						casting = TRUE;
+					end
+
+				targetrange = $distanceBetweenAgents(thisagent,target);
+
+				if (targetrange > attackrange)
+					begin
+						// move towards target
+						thisagent's "destination" = $locationof(target);
+//						thisagent's "activeScript" = $travel_to_safe;
+						thisagent's "activeScript" = $travel_to_berserk;
+						thisagent's "backScript" = $berserk;
+						$move(thisagent,target);
+					end
+				else
+					begin
+						if (casting)
+							$castspell(thisagent,spell_name,target, "");
+						else
+							$PerformAction (ThisAgent, ThisAgent's "Attack_Action", Target);
+					end
+
+			end
+end
+
+function WHP_berserk(agent thisagent)
+
+declare
+	integer targetrange,attackrange;
+	agent target;
+	string spell_name;
+	boolean casting, WeaponReady;
+
+
+begin
+    WeaponReady = TRUE;
+	target = thisagent's "target";
+
+	if ($haslowHP(thisagent) == FALSE)
+		begin
+			// return to normal decisions
+//			thisagent's "activescript" = thisagent's "basicscript";
+			$reset_tasks(thisagent);
+		end
+	else
+		if ($isspellavailable(thisagent,"healer_heal"))
+			begin
+				$castspell(thisagent,"healer_heal",thisagent,"");
+				return;
+			end
+
+		if ($notvalid(thisagent's "target"))
+			begin
+				// pick new target
+				$list_enemies(thisagent,1);
+				if ($listsize(thisagent's "Hostiles") > 0)
+					begin
+						thisagent's "target" = $pick_closest(thisagent,thisagent's "Hostiles");
+					end
+				else
+					begin
+						// no more enemies to fight!
+						//$flee_berserk(thisagent);
+						$reset_tasks(thisagent);
+
+					end
+			end
+		else
+			begin
+				// pick a weapon to use - a spell or regular weapon
+				spell_name = $getbestspell(thisagent,#list_attack);
+
+				if (spell_name == "nothing")
+					begin
+						WeaponReady = $WHP_PrepareWeapon(thisagent,target);
+						attackrange = $getattribute(thisagent,#ATTRIB_maxattackrange);
+						casting = FALSE;
+					end
+				else
+					begin
+						attackrange = thisagent's "castingrange";
+						casting = TRUE;
+					end
+
+				targetrange = $distanceBetweenAgents(thisagent,target);
+
+				if (targetrange > attackrange)
+					begin
+						// move towards target
+						thisagent's "destination" = $locationof(target);
+//						thisagent's "activeScript" = $travel_to_safe;
+						thisagent's "activeScript" = $travel_to_berserk;
+						thisagent's "backScript" = $berserk;
+						$move(thisagent,target);
+					end
+				else
+					begin
+						if (casting)
+							$castspell(thisagent,spell_name,target, "");
+						else
+							if (WeaponReady)
+								$PerformAction (ThisAgent, ThisAgent's "Attack_Action", Target);
+					end
+
+			end
+end
+
+function berserk_defend(agent thisagent)
+
+declare
+	integer targetrange,attackrange;
+	agent target;
+	string spell_name;
+	boolean casting;
+
+begin
+    if (thisagent's "title" == "Witch_Hunter_Prototype")
+    if ($HasAttribute("WHP_Prototype",thisagent))
+        if (thisagent's "WHP_Prototype")
+            begin
+                $WHP_berserk_defend(thisagent);
+                return;
+            end
+	target = thisagent's "target";
+
+	if ($haslowHP(thisagent))
+		begin
+			$heal_self(thisagent);
+		end
+	else
+		if ($notvalid(thisagent's "target"))
+			begin
+				// pick new target
+				$list_enemies(thisagent,2);
+
+				if ($listsize(thisagent's "Hostiles") > 0)
+					begin
+						$debugout("There are hostiles.");
+						thisagent's "target" = $pick_closest(thisagent,thisagent's "Hostiles");
+					end
+				else
+					begin
+						// no more enemies to fight!
+						$debugout("no more enemies to fight, un-berserking.");
+						thisagent's "activescript" = thisagent's "basicscript";
+					end
+			end
+		else
+			begin
+				// pick a weapon to use - a spell or regular weapon
+				spell_name = $getbestspell(thisagent,#list_attack);
+
+				if (spell_name == "nothing")
+					begin
+						attackrange = $getattribute(thisagent,#ATTRIB_maxattackrange);
+						casting = FALSE;
+					end
+				else
+					begin
+						attackrange = thisagent's "castingrange";
+						casting = TRUE;
+					end
+
+				targetrange = $distanceBetweenAgents(thisagent,target);
+
+				if (targetrange > attackrange)
+					begin
+						// move towards target
+						thisagent's "destination" = $locationof(target);
+//						thisagent's "activeScript" = $travel_to_safe;
+						thisagent's "activeScript" = $travel_to_berserk;
+						thisagent's "backScript" = $berserk_defend;
+						$move(thisagent,target);
+					end
+				else
+					begin
+						if (casting)
+							$castspell(thisagent,spell_name,target, "");
+						else
+							$PerformAction (ThisAgent, ThisAgent's "Attack_Action", Target);
+					end
+			end
+end
+
+function WHP_berserk_defend(agent thisagent)
+
+declare
+	integer targetrange,attackrange;
+	agent target;
+	string spell_name;
+	boolean casting, WeaponReady;
+
+begin
+    WeaponReady = TRUE;
+	target = thisagent's "target";
+
+	if ($haslowHP(thisagent))
+		begin
+			$heal_self(thisagent);
+		end
+	else
+		if ($notvalid(thisagent's "target"))
+			begin
+				// pick new target
+				$list_enemies(thisagent,2);
+
+				if ($listsize(thisagent's "Hostiles") > 0)
+					begin
+						$debugout("There are hostiles.");
+						thisagent's "target" = $pick_closest(thisagent,thisagent's "Hostiles");
+					end
+				else
+					begin
+						// no more enemies to fight!
+						$debugout("no more enemies to fight, un-berserking.");
+						thisagent's "activescript" = thisagent's "basicscript";
+					end
+			end
+		else
+			begin
+				// pick a weapon to use - a spell or regular weapon
+				spell_name = $getbestspell(thisagent,#list_attack);
+
+				if (spell_name == "nothing")
+					begin
+						WeaponReady = $WHP_PrepareWeapon(thisagent,target);
+						attackrange = $getattribute(thisagent,#ATTRIB_maxattackrange);
+						casting = FALSE;
+					end
+				else
+					begin
+						attackrange = thisagent's "castingrange";
+						casting = TRUE;
+					end
+
+				targetrange = $distanceBetweenAgents(thisagent,target);
+
+				if (targetrange > attackrange)
+					begin
+						// move towards target
+						thisagent's "destination" = $locationof(target);
+//						thisagent's "activeScript" = $travel_to_safe;
+						thisagent's "activeScript" = $travel_to_berserk;
+						thisagent's "backScript" = $berserk_defend;
+						$move(thisagent,target);
+					end
+				else
+					begin
+						if (casting)
+							$castspell(thisagent,spell_name,target, "");
+						else
+							if (WeaponReady)
+								$PerformAction (ThisAgent, ThisAgent's "Attack_Action", Target);
+					end
+			end
+end

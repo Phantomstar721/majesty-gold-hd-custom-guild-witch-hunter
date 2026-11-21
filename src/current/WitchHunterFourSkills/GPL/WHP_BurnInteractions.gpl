@@ -1,0 +1,142 @@
+// One owning burn effector/thread, with saved per-application budgets.
+function WHP_BurnValid(agent Target) is boolean
+declare
+    agent Source;
+begin
+    if ($WHP_Living(Target) == FALSE) return FALSE;
+    if ($CheckEffector(Target, "WHP_Burn") == FALSE) return FALSE;
+    if ($HasAttribute("WHP_BurnSource", Target) == FALSE) return FALSE;
+    Source = Target's "WHP_BurnSource";
+    if ($WHP_Living(Source) == FALSE) return FALSE;
+    if ($GetUnitPlayerNumber(Source) != Target's "WHP_BurnPlayer") return FALSE;
+    if ($GetUnitPlayerNumber(Target) != Target's "WHP_BurnTargetPlayer") return FALSE;
+    if ($HasAttribute("WHP_LifeEpoch", Source))
+        if (Source's "WHP_LifeEpoch" != Target's "WHP_BurnLifeEpoch") return FALSE;
+    return Target's "WHP_BurnTicks" > 0;
+end
+
+function WHP_BurnPotency(agent Target) is integer
+declare
+begin
+    if ($HasAttribute("WHP_BurnPotency", Target) == FALSE) return #WHP_BurnBase;
+    return Target's "WHP_BurnPotency";
+end
+
+function WHP_SetBurn(agent Hunter, agent Target, integer Potency, integer Ticks, boolean Primary)
+declare
+    boolean Existing;
+begin
+    if ($WHP_Living(Hunter) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return;
+    if ($HasAttribute("WHP_BurnTicks", Target) == FALSE)
+        begin
+            $AddAttribute(Target, "WHP_BurnTicks", "integer", 0);
+            $AddAttribute(Target, "WHP_BurnSource", "agentref", $NullAgent());
+            $AddAttribute(Target, "WHP_BurnPlayer", "integer", -1);
+            $AddAttribute(Target, "WHP_BurnTargetPlayer", "integer", -1);
+            $AddAttribute(Target, "WHP_BurnScript", "function", $WHP_BurnTick);
+        end
+    if ($HasAttribute("WHP_BurnLifeEpoch", Target) == FALSE)
+        $AddAttribute(Target, "WHP_BurnLifeEpoch", "integer", -1);
+    if ($HasAttribute("WHP_BurnPotency", Target) == FALSE)
+        begin
+            $AddAttribute(Target, "WHP_BurnPotency", "integer", #WHP_BurnBase);
+            $AddAttribute(Target, "WHP_BurnPrimary", "boolean", FALSE);
+            $AddAttribute(Target, "WHP_BurnRefreshed", "boolean", TRUE);
+            $AddAttribute(Target, "WHP_BurnSpread", "boolean", TRUE);
+        end
+    Existing = $CheckEffector(Target, "WHP_Burn");
+    Target's "WHP_BurnLifeEpoch" = -1;
+    if ($HasAttribute("WHP_LifeEpoch", Hunter)) Target's "WHP_BurnLifeEpoch" = Hunter's "WHP_LifeEpoch";
+    Target's "WHP_BurnTicks" = Ticks;
+    Target's "WHP_BurnPotency" = Potency;
+    Target's "WHP_BurnPrimary" = Primary;
+    Target's "WHP_BurnRefreshed" = FALSE;
+    Target's "WHP_BurnSpread" = FALSE;
+    Target's "WHP_BurnSource" = Hunter;
+    Target's "WHP_BurnPlayer" = $GetUnitPlayerNumber(Hunter);
+    Target's "WHP_BurnTargetPlayer" = $GetUnitPlayerNumber(Target);
+    $CreateEffector(Target, "WHP_Burn", 1, "infinite");
+    if (Existing == FALSE)
+        begin
+            Target's "WHP_BurnScript" = $WHP_BurnTick;
+            $NewThread(Target's "WHP_BurnScript", #WHP_BurnInterval, Target);
+        end
+end
+
+function WHP_EmbersteelHit(agent Hunter, agent Target)
+declare
+    integer Payout;
+begin
+    if ($WHP_HasFitting(Hunter, "WHP_Embersteel") == FALSE) return;
+    if (Hunter's "AttackType" != 1) return;
+    if ($WHP_OwnsMark(Hunter, Target) == FALSE) return;
+    if ($WHP_BurnValid(Target) == FALSE) return;
+    if (Target's "WHP_BurnSource" != Hunter) return;
+    Payout = Target's "WHP_BurnTicks" * $WHP_BurnPotency(Target) + #WHP_EmberBonus;
+    // End callback consumes state and thread BEFORE any payout/reentry.
+    $DeleteEffector(Target, "WHP_Burn");
+    $AdjustAttribute(Target, #ATTRIB_HP, -$WHP_StatusDamage(Hunter, Target, Payout, 0));
+end
+
+function WHP_FireRefresh(agent Caster, agent Target)
+declare
+begin
+    if ($IsValidGamePiece(Caster) == FALSE) return;
+    if (Caster's "Title" != "Solarus") return;
+    if ($WHP_ChapterLevel(Caster) < 2) return;
+    if ($WHP_BurnValid(Target) == FALSE) return;
+    if ($GetUnitPlayerNumber(Caster) != Target's "WHP_BurnPlayer") return;
+    if ($HasAttribute("WHP_BurnPrimary", Target) == FALSE) return;
+    if (Target's "WHP_BurnPrimary" == FALSE) return;
+    if (Target's "WHP_BurnRefreshed") return;
+    if (Target's "WHP_BurnTicks" >= #WHP_BurnTicks) return;
+    Target's "WHP_BurnRefreshed" = TRUE;
+    Target's "WHP_BurnTicks" = #WHP_BurnTicks;
+end
+
+function WHP_SpreadSeed(agent Caster, agent Target) is boolean
+declare
+begin
+    if ($WHP_BurnValid(Target) == FALSE) return FALSE;
+    if ($GetUnitPlayerNumber(Caster) != Target's "WHP_BurnPlayer") return FALSE;
+    if ($HasAttribute("WHP_BurnPrimary", Target) == FALSE) return FALSE;
+    if (Target's "WHP_BurnPrimary" == FALSE) return FALSE;
+    if (Target's "WHP_BurnSpread") return FALSE;
+    return $WHP_OwnsMark(Target's "WHP_BurnSource", Target);
+end
+
+function WHP_ScorchSpread(agent Caster, list HitTargets)
+declare
+    agent Target, Seed, Source;
+    integer Distance, BestDistance, Potency;
+begin
+    if ($IsValidGamePiece(Caster) == FALSE) return;
+    if (Caster's "Title" != "Solarus") return;
+    if ($WHP_ChapterLevel(Caster) < 2) return;
+    Seed = $NullAgent();
+    BestDistance = 100000;
+    foreach Target in HitTargets do
+        if ($WHP_SpreadSeed(Caster, Target))
+            begin
+                Distance = $DistanceBetweenAgents(Caster, Target);
+                if ((Distance < BestDistance) || (Caster's "Target" == Target))
+                    begin
+                        if ((Seed == $NullAgent()) || (Seed != Caster's "Target"))
+                            begin
+                                Seed = Target;
+                                BestDistance = Distance;
+                            end
+                    end
+            end
+    if (Seed == $NullAgent()) return;
+    Source = Seed's "WHP_BurnSource";
+    Potency = $WHP_BurnPotency(Seed) / 2;
+    if (Potency < 1) Potency = 1;
+    Seed's "WHP_BurnSpread" = TRUE;
+    foreach Target in HitTargets do
+        if ($WHP_Living(Target))
+            if ($CheckEffector(Target, "WHP_Burn") == FALSE)
+                $WHP_SetBurn(Source, Target, Potency, #WHP_SecondaryTicks, FALSE);
+end

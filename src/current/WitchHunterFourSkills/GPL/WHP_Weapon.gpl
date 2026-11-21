@@ -1,0 +1,38 @@
+// Same-weapon attacks retain stock cadence. Settlement owns only weapon changes.
+function WHP_PrepareWeapon(agent thisagent, agent target) is boolean
+declare
+    integer settled, desired, distance;
+begin
+    // Saved stale IDs require a stable decision snapshot only at capacity.
+    if ($WHP_FreeShotSlot(thisagent) < 0)
+        $WHP_PruneShots(thisagent);
+    distance = $distanceBetweenAgents(thisagent,target);
+    desired = 2;
+    if (distance <= 1) desired = 1;
+    if (desired != thisagent's "attacktype")
+        thisagent's "WHP_SwitchPending" = TRUE;
+    if (thisagent's "WHP_SwitchPending")
+        begin
+            settled = -1;
+            $WHP_AttackSettled(settled, thisagent);
+            if (settled != 1) return FALSE;
+            // Revalidate the decision after release/hit owners have retired.
+            if ($notvalid(target)) return FALSE;
+            if (thisagent's "target" != target) return FALSE;
+            distance = $distanceBetweenAgents(thisagent,target);
+            if (distance <= 1)
+                begin
+                    thisagent's "attacktype" = 1;
+                    thisagent's "attack_action" = "WHP_Hatchet";
+                    $SetAttribute(thisagent,#ATTRIB_maxattackrange,1);
+                end
+            else
+                begin
+                    thisagent's "attacktype" = 2;
+                    thisagent's "attack_action" = "WHP_Bolt";
+                    $SetAttribute(thisagent,#ATTRIB_maxattackrange,$WHP_CrossbowRange(thisagent));
+                end
+            thisagent's "WHP_SwitchPending" = FALSE;
+        end
+    return TRUE;
+end

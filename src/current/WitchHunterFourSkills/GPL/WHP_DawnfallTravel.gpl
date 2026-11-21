@@ -1,0 +1,35 @@
+// Reuse durable learning and exact-target cast policy at stock approach entry.
+function WHP_DawnfallTravel(agent thisagent) is boolean
+declare
+begin
+    if (thisagent's "Title" != "Solarus") return FALSE;
+    $WHP_DawnfallLearn(thisagent);
+    return $WHP_DawnfallTry(thisagent, thisagent's "Target");
+end
+
+function TryTravelSpell( agent thisagent ) is boolean
+
+declare
+	string spellname;
+
+begin
+	// don't use spells if traveling to a waypoint
+	if ($HasWayPoints( thisagent ) == FALSE)
+		begin
+			// can I use any helpful travel spells?
+			spellname = $getbestspell(thisagent,#list_travel);
+			if (spellname != "nothing")
+				begin
+					$cast(thisagent,spellname,thisagent, "");
+					return True;
+				end
+
+            // Stock travel spells keep priority; Dawnfall uses the chosen target.
+            if (thisagent's "Title" == "Solarus")
+                if ($WHP_DawnfallTravel(thisagent)) return TRUE;
+
+			return False;
+
+		end
+end
+

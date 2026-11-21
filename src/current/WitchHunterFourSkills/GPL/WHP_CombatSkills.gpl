@@ -1,0 +1,176 @@
+function make_attack( agent thisagent, agent target)
+
+declare
+	integer hitresult,exp_given,WHP_Code;
+
+begin
+	// these two checks are here due to the time delay between the action initiation
+	// and the action conclusion;
+	if ($notvalid(target))
+		return;
+
+
+	if ($notvalid_attacker(thisagent))
+		return;
+
+
+	// attacking removes camouflage effect
+	if ($GetAttribute( thisagent, #ATTRIB_HasEffectCamouflage ) != 0)
+		begin
+			$DeleteEffector( thisagent, "camouflage_icon" );
+		end
+
+
+	$react(thisagent,target);
+
+
+	WHP_Code = $WHP_TakeHit(thisagent,target);
+	hitresult = $hit(thisagent,target);
+
+	// expereience checking
+
+	exp_given = $exp_value(thisagent,target);
+
+
+	if (hitresult == 1) // hit!
+		begin
+//			$debugout(thisagent's "title","HIT the",target's "title");
+			$damage(thisagent,target);
+			$WHP_HitEffects(thisagent,target,WHP_Code);
+            $WHP_BastionHit(thisagent,target);
+		end
+//	else
+//		if (hitresult == 2) // parried
+//			begin
+////					$debugout(thisagent's "title","attack was PARRIED/DODGED by",target's "title");
+//			end
+//		else
+//			if (hitresult == 3) // missed
+//				begin
+//  //					$debugout(thisagent's "title","MISSED the",Target's "title");
+//				end
+
+	$attack_end(thisagent,exp_given);
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+function WHP_DirectSpellDamage(agent attacker,agent defender,integer damage, integer damage_minimum)
+declare
+begin
+    $MM_Damage_Spell(attacker,attacker,defender,damage,damage_minimum,0,TRUE);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// This is a player cast spell attacking, not from
+// an agent, but from a mouse-click
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// This is a player cast spell attacking, not from
+// an agent, but from a mouse-click
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+function gettoavoid(agent attacker, agent defender) is integer
+
+declare
+	integer value;
+	boolean WHP_Ignored;
+	agent AIRootAgent;
+
+begin
+	WHP_Ignored = $WHP_MarkActive(defender);
+	if (attacker's "attacktype" == 1)
+		begin
+			value = $getattribute(defender,#ATTRIB_Parry);
+		end
+	else
+		if (attacker's "attacktype" == 2)
+			begin
+				value = $getattribute(defender,#ATTRIB_Dodge);
+			end
+		else
+			if (Attacker's "AttackType" == 5)
+				begin
+					value = $getattribute(defender,#ATTRIB_Dodge);
+				end
+
+	AIRootAgent = $RetrieveAgent ( "GplAIRoot" );
+	if ( $HasAttribute ( "Deathmatch_Rules", AIRootAgent ))
+		begin
+			if ( AIRootAgent's "Deathmatch_Rules" == TRUE )
+				begin
+					if (value > #Deathmatch_max_toavoid)
+						value = #Deathmatch_max_toavoid;
+				end
+			else
+				begin
+					if (value > #max_toavoid)
+						value = #max_toavoid;
+				end
+		end
+	else
+		begin
+			if (value > #max_toavoid)
+				value = #max_toavoid;
+		end
+
+	return value;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+// stock.damage-contribution.v1: invocation-local adapters, no HP debit or roll.
+function WHP_WeaponPreArmor(agent Attacker, agent Defender, integer Amount, integer State, boolean Critical) is integer
+declare
+begin
+    return Amount + $WHP_SunhammerBonus(Attacker,Defender);
+end
+
+function WHP_WeaponBlocked(agent Attacker, agent Defender, integer Amount, integer State, boolean Critical) is integer
+declare
+begin
+    return Amount - $WHP_InlayRecovery(Attacker,Defender,Amount);
+end
+
+function WHP_WeaponPercentReduce(agent Attacker, agent Defender, integer Amount, integer State, boolean Critical) is integer
+declare
+begin
+    return $WHP_DamageWithFloor(Attacker,Defender,Amount,$WHP_BastionPercent(Attacker,Defender));
+end
+
+function WHP_SpellPercentReduce(agent Source, agent Attacker, agent Defender, integer Amount) is integer
+declare
+begin
+    return $WHP_WardDamage(Defender,Amount);
+end
+
+function WHP_SpellDamageScale(agent Source, agent Attacker, agent Defender, integer Amount) is integer
+declare
+begin
+    return $WHP_StatusDamage(Attacker, Defender, Amount, 0);
+end

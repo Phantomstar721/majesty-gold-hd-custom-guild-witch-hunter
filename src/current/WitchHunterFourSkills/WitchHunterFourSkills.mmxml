@@ -1,0 +1,75 @@
+<Majesty>
+  <Mod id="{ff8086be-49f0-4ee2-9c79-3d85a2a57c13}">
+    <Name>WitchHunterFourSkills</Name>
+    <DisplayName lang="en_US">Custom Guild: Witch Hunters</DisplayName>
+    <Description lang="en_US">
+      <Short>Recruit Witch Hunters and equip your kingdom with silver.</Short>
+      <Long>Adds the Chapterhouse, Witch Hunters with hand crossbows and hatchets, silver equipment and Plague Control at the Argent Crucible, Breach the Den, and Solarii Dawnfall. Requires a compatible Majesty Mod Manager.</Long>
+    </Description>
+    <DataConfiguration>
+      <Dataset base="Any">
+        <Load>
+          <Descriptions>Data\whp_units.xml</Descriptions>
+          <GPL>
+            <Target>Data\WHP.bcd</Target>
+            <Source>GPL\WHP_Attack.gpl</Source>
+            <Source>GPL\WHP_BuildingDamage.gpl</Source>
+            <Source>GPL\WHP_Buildings.dat</Source>
+            <Source>GPL\WHP_BurnInteractions.gpl</Source>
+            <Source>GPL\WHP_Cleanup.gpl</Source>
+            <Source>GPL\WHP_CombatSkills.gpl</Source>
+            <Source>GPL\WHP_FireCallbacks.gpl</Source>
+            <Source>GPL\WHP_Hero.dat</Source>
+            <Source>GPL\WHP_Hero.gpl</Source>
+            <Source>GPL\WHP_HomeLookup.gpl</Source>
+            <Source>GPL\WHP_HunterAI.gpl</Source>
+            <Source>GPL\WHP_Purchases.gpl</Source>
+            <Source>GPL\WHP_Settings.gpl</Source>
+            <Source>GPL\WHP_ShotTickets.gpl</Source>
+            <Source>GPL\WHP_Siege.gpl</Source>
+            <Source>GPL\WHP_Skills.gpl</Source>
+            <Source>GPL\WHP_Weapon.gpl</Source>
+            <Source>GPL\WHP_Workshop.gpl</Source>
+            <Source>GPL\WHP_DawnfallConsumer.gpl</Source>
+            <Source>GPL\WHP_DawnfallScoring.gpl</Source>
+            <Source>GPL\WHP_DawnfallTravel.gpl</Source>
+            <Source>GPL\WHP_DawnfallProviderStub.gpl</Source>
+            <Source>GPL\WHP_DawnfallSolarusTree.gpl</Source>
+            <Source>GPL\WHP_DawnfallRelease.gpl</Source>
+            <Source>GPL\WHP_BreachPaid.gpl</Source>
+            <Source>GPL\WHP_BreachIncentive.gpl</Source>
+            <Source>GPL\WHP_BreachSpell.dat</Source>
+            <Source>GPL\WHP_CrucibleHire.gpl</Source>
+            <Source>GPL\WHP_CombatPolicy.gpl</Source>
+            <Source>GPL\WHP_Fittings.gpl</Source>
+            <Source>GPL\WHP_Plague.gpl</Source>
+          </GPL>
+          <Descriptions>Data\whp_actions.xml</Descriptions>
+          <Descriptions>Data\whp_overlays.xml</Descriptions>
+          <CAM>Data\whp_dependencies.cam</CAM>
+          <CAM>Data\whp_panels.cam</CAM>
+          <Descriptions>Data\whp_buildings.xml</Descriptions>
+          <CAM>Data\whp_research.cam</CAM>
+          <CAM>Data\whp_help.cam</CAM>
+          <CAM>Data\whp_info_icons.cam</CAM>
+          <CAM>Data\whp_breach_panel.cam</CAM>
+          <CAM>Data\whp_names.cam</CAM>
+          <CAM>Data\whp_world_art.cam</CAM>
+          <Descriptions>Data\whp_sounds.xml</Descriptions>
+          <CAM>Data\whp_attack_audio.cam</CAM>
+          <CAM>Data\whp_equipment.cam</CAM>
+        </Load>
+      </Dataset>
+      <Dataset base="Majesty">
+        <Load>
+          <Descriptions>Data\whp_dawnfall_solarus.xml</Descriptions>
+        </Load>
+      </Dataset>
+      <Dataset base="MajestyExpansion">
+        <Load>
+          <Descriptions>DataMX\whp_dawnfall_solarus.xml</Descriptions>
+        </Load>
+      </Dataset>
+    </DataConfiguration>
+  </Mod>
+</Majesty>

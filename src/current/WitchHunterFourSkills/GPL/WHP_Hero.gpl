@@ -1,0 +1,11 @@
+// Stock adept_birth precedent: initialize private state, then ordinary hero birth.
+function WHP_HeroBirth(agent ThisAgent)
+declare
+begin
+    if ($HasAttribute("WHP_Prototype",ThisAgent) == FALSE)
+        $AddAttribute(ThisAgent,"WHP_Prototype","boolean",TRUE);
+    if ($HasAttribute("WHP_SwitchPending",ThisAgent) == FALSE)
+        $AddAttribute(ThisAgent,"WHP_SwitchPending","boolean",FALSE);
+    $hero_birth(ThisAgent);
+    $WHP_LevelChanged(ThisAgent, 0);
+end

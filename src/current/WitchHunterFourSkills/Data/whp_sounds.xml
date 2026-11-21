@@ -1,0 +1,215 @@
+<Majesty>
+  <Description type="Sound" subType="Standard" ID="WSR1" Name="WHRng">
+    <Engine version="1">
+      <Category value="0" />
+      <Phase ID="VFX_GO_COMBAT">
+        <Wave value="WV01" />
+        <Group value="Enter_Combat_Group" />
+      </Phase>
+      <Phase ID="VFX_FLEE_COMBAT">
+        <Wave value="WV06" />
+        <Group value="Flee_Combat_Group" />
+      </Phase>
+      <Phase ID="VFX_DECIDING">
+        <Wave value="WV03" />
+        <Group value="Deciding_Group" />
+      </Phase>
+      <Phase ID="VFX_GO_REWARD">
+        <Wave value="WV04" />
+        <Group value="GoReward_Group" />
+      </Phase>
+      <Phase ID="VFX_FIND_COOL">
+        <Wave value="WV05" />
+        <Group value="Find_Cool_Group" />
+      </Phase>
+      <Phase ID="VFX_SPECIAL1">
+        <Wave value="WV07" />
+        <Group value="Voice_Special_1_Group" />
+      </Phase>
+      <Phase ID="Death">
+        <Wave value="WV10" />
+        <Group value="Death_Group" />
+        <DistanceModifier value="10001.0" />
+      </Phase>
+      <Phase ID="VFX_GAIN_LEVEL">
+        <Wave value="WV08" />
+        <Group value="Up-Level_Group" />
+      </Phase>
+      <Phase ID="VFX_SEE_HOSTILE">
+        <Wave value="WV02" />
+        <Group value="See_hostile_Group" />
+      </Phase>
+      <Phase ID="Attack">
+        <Wave value="WHX1" />
+        <Group value="Attack_Group" />
+        <VolumeVariation up="1000" down="100" />
+        <FrequencyVariation up="500" down="500" />
+      </Phase>
+      <Phase ID="GetHit">
+        <Wave value="HG03" />
+        <Group value="GetHit_Group" />
+        <FrequencyVariation up="500" down="500" />
+      </Phase>
+      <Phase ID="VFX_LEVEL_10">
+        <Wave value="WV09" />
+        <DistanceModifier value="10001.0" />
+      </Phase>
+      <Phase ID="Easter_Egg">
+        <Wave value="WV11" />
+        <DistanceModifier value="10002.0" />
+      </Phase>
+    </Engine>
+  </Description>
+  <Description type="Sound" subType="Standard" ID="WSM1" Name="WHMel">
+    <Engine version="1">
+      <Category value="0" />
+      <Phase ID="VFX_GO_COMBAT">
+        <Wave value="WV01" />
+        <Group value="Enter_Combat_Group" />
+      </Phase>
+      <Phase ID="VFX_FLEE_COMBAT">
+        <Wave value="WV06" />
+        <Group value="Flee_Combat_Group" />
+      </Phase>
+      <Phase ID="VFX_DECIDING">
+        <Wave value="WV03" />
+        <Group value="Deciding_Group" />
+      </Phase>
+      <Phase ID="VFX_GO_REWARD">
+        <Wave value="WV04" />
+        <Group value="GoReward_Group" />
+      </Phase>
+      <Phase ID="VFX_FIND_COOL">
+        <Wave value="WV05" />
+        <Group value="Find_Cool_Group" />
+      </Phase>
+      <Phase ID="VFX_SPECIAL1">
+        <Wave value="WV07" />
+        <Group value="Voice_Special_1_Group" />
+      </Phase>
+      <Phase ID="Death">
+        <Wave value="WV10" />
+        <Group value="Death_Group" />
+        <DistanceModifier value="10001.0" />
+      </Phase>
+      <Phase ID="VFX_GAIN_LEVEL">
+        <Wave value="WV08" />
+        <Group value="Up-Level_Group" />
+      </Phase>
+      <Phase ID="VFX_SEE_HOSTILE">
+        <Wave value="WV02" />
+        <Group value="See_hostile_Group" />
+      </Phase>
+      <Phase ID="Attack">
+        <Wave value="WHX2" />
+        <Group value="Attack_Group" />
+        <VolumeVariation up="1000" down="100" />
+        <FrequencyVariation up="1500" down="1000" />
+      </Phase>
+      <Phase ID="GetHit">
+        <Wave value="HG03" />
+        <Group value="GetHit_Group" />
+        <FrequencyVariation up="500" down="500" />
+      </Phase>
+      <Phase ID="VFX_LEVEL_10">
+        <Wave value="WV09" />
+        <DistanceModifier value="10001.0" />
+      </Phase>
+      <Phase ID="Easter_Egg">
+        <Wave value="WV11" />
+        <DistanceModifier value="10002.0" />
+      </Phase>
+    </Engine>
+  </Description>
+  <Description type="Sound" subType="Standard" ID="WSC1" Name="WHP_ChapterS1">
+    <Engine version="1">
+      <Category value="0" />
+      <Phase ID="GetHit">
+        <Wave value="HG35" />
+        <FrequencyVariation up="1000" down="22" />
+      </Phase>
+      <Phase ID="Select">
+        <Wave value="WCV1" />
+        <DistanceModifier value="10000.0" />
+      </Phase>
+      <Phase ID="Ambient_Die1">
+        <Wave value="AM01" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die2">
+        <Wave value="AM01" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die3">
+        <Wave value="AM01" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die4">
+        <Wave value="AM01" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die5">
+        <Wave value="AM01" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die6">
+        <Wave value="AM01" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Active1">
+        <Wave value="AM19" />
+        <Flags value="Looped" />
+      </Phase>
+    </Engine>
+  </Description>
+  <Description type="Sound" subType="Standard" ID="WSS1" Name="WHP_CrucS1">
+    <Engine version="1">
+      <Category value="0" />
+      <Phase ID="Select">
+        <Wave value="WSV1" />
+        <DistanceModifier value="10000.0" />
+      </Phase>
+      <Phase ID="GetHit">
+        <Wave value="HG33" />
+        <FrequencyVariation up="1000" down="500" />
+      </Phase>
+      <Phase ID="Ambient_Active1">
+        <Wave value="AM11" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die1">
+        <Wave value="AM14" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die2">
+        <Wave value="AM14" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die3">
+        <Wave value="AM14" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die4">
+        <Wave value="AM14" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die5">
+        <Wave value="AM14" />
+        <Flags value="Looped" />
+      </Phase>
+      <Phase ID="Ambient_Die6">
+        <Wave value="AM14" />
+        <Flags value="Looped" />
+      </Phase>
+    </Engine>
+  </Description>
+  <Description type="Sound" subType="Standard" ID="WBCS" Name="WHP_BreachRock1">
+    <Engine version="1">
+      <Category value="0" />
+      <Phase ID="Effector Begin">
+        <Wave value="WBCK" />
+        <Group value="Guild_Spell_Group" />
+      </Phase>
+    </Engine>
+  </Description>
+</Majesty>

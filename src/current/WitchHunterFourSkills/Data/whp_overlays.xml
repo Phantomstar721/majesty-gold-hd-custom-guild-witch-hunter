@@ -1,0 +1,265 @@
+<Majesty>
+  <Description type="Unit" subType="Overlay" ID="WH00" Name="WHP_Mark" Description="Hunter's Mark">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WMK1" />
+      <Script type="0" cProc="0" GPLFunction="WHP_MarkEnd" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH01" Name="WHP_MarkLease" Description="Hunter's quarry">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_LeaseEnd" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH02" Name="WHP_Sunder" Description="Weakening Strike">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WSU1" />
+      <Script type="0" cProc="0" GPLFunction="WHP_SunderEnd" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH03" Name="WHP_Ward" Description="Witch Ward">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WWA1" />
+      <Script type="0" cProc="0" GPLFunction="WHP_WardEnd" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH04" Name="WHP_WardCooldown" Description="Witch Ward recharging">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH05" Name="WHP_SilverCooldown" Description="Silver Bolt recharging">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH06" Name="WHP_Burn" Description="Silver Burn">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WBU1" />
+      <Script type="0" cProc="0" GPLFunction="WHP_BurnEnd" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH07" Name="WHP_SunhammerCharge" Description="Argent Sunmace charged">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH08" Name="WHP_Bastion" Description="Silver Bastion">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH09" Name="WHP_Breach" Description="Breach the Den">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WBR1" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH0A" Name="WHP_DawnfallCooldown" Description="Dawnfall recharging">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WVI1" Name="WHP_InlaysPurchased" Description="Silver Inlays acquired">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="11" />
+      <ImageIDBase value="ARB5" />
+      <DefaultSound value="Get_Item" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="0" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WVH1" Name="WHP_SunhammerPurchased" Description="Argent Sunmace acquired">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="11" />
+      <ImageIDBase value="ARB5" />
+      <DefaultSound value="Get_Item" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="0" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WDTO" Name="WHP_DawnfallTransition" Description="Dawnfall transition">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WRd1" />
+      <AttachmentPointID value="3" />
+      <DefaultSound value="Teleport" />
+      <Info value="NotVisibleInISOView" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="0" />
+      <Flags value="TransparentToMouse" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH0B" Name="WHP_SunderingShot" Description="Sundering Shot">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="11" />
+      <ImageIDBase value="WSU1" />
+      <Script type="0" cProc="0" GPLFunction="WHP_SunderingEnd" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH0C" Name="WHP_GravebindSlow" Description="Gravebound">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH0D" Name="WHP_SaltsImmunity" Description="Silver Salts protection">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Overlay" ID="WH0E" Name="WHP_PurgeCooldown" Description="Purge recharging">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Info value="NotVisibleInISOView" />
+      <Menu value="11" />
+      <ImageIDBase value="PRB2" />
+      <Script type="0" cProc="0" GPLFunction="WHP_Noop" />
+      <DefaultSound value="0" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="0" />
+      <StackPriority value="1" />
+    </Game>
+  </Description>
+</Majesty>

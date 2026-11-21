@@ -1,0 +1,77 @@
+function reset_tasks(agent thisagent)
+
+declare
+
+begin
+    $WHP_ClearHunter(ThisAgent);
+	// TODO: Why doesn't reset_tasks stop the unit's movement or clear its order stack in some
+	// fashion?  It could complete an existing hide order and end up doing very wierd stuff
+	// inside a building or other strangeness as it currently stands.
+	$StopMoving (ThisAgent);
+	
+	thisagent's "target" = $Nullagent();
+	thisagent's "activescript" = thisagent's "basicscript";
+	thisagent's "backscript" = thisagent's "basicscript";
+	$clearlist(thisagent's "hostiles");
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+function gravestone(agent thisagent)
+
+declare
+	integer 	grave_time, level;
+	agent		Target;
+
+begin
+    $WHP_HunterDeath(ThisAgent);
+    $DeleteEffector(ThisAgent, "WHP_SunhammerCharge");
+	level = $getattribute ( thisagent, #ATTRIB_experiencelevel );
+
+	grave_time = #gravestone_lifespan * (( level / 3 ) + 1 );
+	if ( grave_time > #Gravestone_lifespan_max )
+		grave_time = #gravestone_lifespan_max;
+
+	if ( thisagent's "title" == "Solarus" )
+		if ( level >= #Solarii_Min_Supernova_Level )
+			$Supernova_Blast ( thisagent, thisagent );
+
+	thisagent's "type" = "Dead";
+
+	$SpecifyIntent (ThisAgent, #intent_dead);
+
+	$MiniMapAnimation( ThisAgent, "hero_death" );
+
+	// NLS BUGFIX2
+	// need to do this to fix freeze spell gravestone bug
+	$ResumeThread(thisagent's "Activescript");
+
+	$stopmoving(thisagent);
+	// Drop some items, other will be dropped when be_dead is called.
+	$Hero_Drop_Immediate_Items(thisAgent);	
+	thisagent's "Activescript" = $be_dead;
+	$setthreadinterval(thisagent's "ActiveScript",grave_time);
+	$performaction(thisagent,"basic_death",thisagent);
+
+	//SINCE IT IS POSSIBLE FOR UNITS TO DIE INSIDE OF BUILDINGS, WE HAVE TO MAKE SURE
+	//TO CLEAN THE AGENT OFF OF AN OCCUPANTS LIST (IF THEY WERE ON ONE)...
+	Target = ThisAgent's "Target";
+	If ($IsValidGamePiece (ThisAgent's "Target") )
+		begin
+
+			//Does my target have an occupants list?
+			If ($HasAttribute ("Occupants", Target) )
+				//If so, am I on it?
+				If ( $AgentInList (ThisAgent, Target's "Occupants") )
+					//If yes, then take me off
+					Target's "Occupants" -= ThisAgent;
+
+		end
+
+
+	$LocalChatMessage( $GetUnitPlayerNumber( ThisAgent  ), #chat_character_died, ThisAgent );
+end
+
+///////////////////////////////////////////////////////////////////////////////
+// This function is called by the in-game code when a gravestone
+// is being dismissed

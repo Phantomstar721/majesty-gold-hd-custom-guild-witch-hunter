@@ -1,0 +1,56 @@
+<Majesty>
+  <Description type="Unit" subType="Character" ID="WHP1" Name="Witch_Hunter_Prototype" Description="Witch Hunter">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="6" />
+      <ImageIDBase value="WHAH" />
+      <Attachment kind="Movement" type="Walk" ID="Class 2" />
+      <DefaultSound value="WHMel" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="AP20" />
+      <Cost value="450" />
+      <Experience value="1250" />
+      <MaxHP value="18" />
+      <SightRange value="230" />
+      <Speed value="3" />
+      <AttackRange min="100" max="130" />
+      <Vitality value="14" />
+      <Artifice value="22" />
+      <WillPower value="18" />
+      <Intelligence value="16" />
+      <Strength value="15" />
+      <RangedAttack value="65" />
+      <Parry value="35" />
+      <Dodge value="45" />
+      <WeaponBasicDamage value="7" />
+      <ArmorBasicDamage value="3" />
+      <RecruitDelay value="12000" />
+      <NameGenType value="NMWH" />
+      <Flags value="Heals" />
+      <Flags value="HasHPBar" />
+      <Flags value="CanHighlight" />
+      <HelpID value="hWH0" />
+      <AllowedWeapon value="Crossbow" />
+      <AllowedArmor value="Leather" />
+      <Attack value="75" />
+      <MagicResistance value="20" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Character" ID="WHBS" Name="WHP_BreachSpell" Description="Breach the Den">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="DontBlock" />
+      <Menu value="12" />
+      <ImageIDBase value="WBFX" />
+      <Script type="0" cProc="0" GPLFunction="WHP_BreachVisualBirth" />
+      <Attachment kind="Movement" type="Walk" ID="Class 1" />
+      <DefaultSound value="WHP_BreachRock1" />
+    </Engine>
+    <Game version="1">
+      <RecruitDelay value="10000" />
+      <Flags value="NotInMiniMap" />
+    </Game>
+  </Description>
+</Majesty>

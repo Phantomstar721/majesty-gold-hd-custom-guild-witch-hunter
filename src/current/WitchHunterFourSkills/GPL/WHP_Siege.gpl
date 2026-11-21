@@ -1,0 +1,93 @@
+// Consumer predicates only. No sovereign callback or movement is registered
+// until the provider proves exact lair targeting and safe exterior placement.
+function WHP_BreachActive(agent Target, integer Player) is boolean
+declare
+begin
+    if ($WHP_Living(Target) == FALSE) return FALSE;
+    if (Target's "Type" != "Lair") return FALSE;
+    if ($HasAttribute("WHP_BreachPlayer", Target) == FALSE) return FALSE;
+    if ($HasAttribute("WHP_BreachTargetPlayer", Target) == FALSE) return FALSE;
+    if (Target's "WHP_BreachPlayer" != Player) return FALSE;
+    if (Target's "WHP_BreachTargetPlayer" != $GetUnitPlayerNumber(Target)) return FALSE;
+    return $CheckEffector(Target, "WHP_Breach");
+end
+
+function WHP_BreachAllows(agent Attacker, agent Defender) is boolean
+declare
+begin
+    if ($WHP_Living(Attacker) == FALSE) return FALSE;
+    if (Attacker's "Subtype" != "Hero") return FALSE;
+    if ($WHP_BreachHostile(Attacker, Defender) == FALSE) return FALSE;
+    return $WHP_BreachActive(Defender, $GetUnitPlayerNumber(Attacker));
+end
+
+// Stock LearnSpell owns durable learned storage and is idempotent.
+// Literal stock building-completion attributes; nominal upgrade level alone is insufficient.
+function WHP_DawnfallChapterReady(agent Caster) is boolean
+declare
+    list Buildings;
+    agent Building;
+    boolean Found;
+begin
+    Found = FALSE;
+    $ListObjects(Caster,"Building",-1,Buildings,#MyPlayer,#CheckTitles,"WHP_Chapterhouse",#ATTRIB_FirstStageBuilt,1);
+    foreach Building in Buildings do
+        if ($WHP_Living(Building))
+            if (Building's "Level" >= 3)
+                if ($GetAttribute(Building,#ATTRIB_CurrentStageBuilt) == 1) Found = TRUE;
+    return Found;
+end
+
+function WHP_DawnfallLearn(agent Caster)
+declare
+begin
+    if ($WHP_Living(Caster) == FALSE) return;
+    if (Caster's "Title" != "Solarus") return;
+    if ($GetAttribute(Caster, #ATTRIB_ExperienceLevel) < #WHP_DawnfallLevel) return;
+    if ($WHP_DawnfallChapterReady(Caster) == FALSE) return;
+    $LearnSpell(Caster,"WHP_DawnfallCast");
+end
+
+function WHP_DawnfallCaster(agent Caster) is boolean
+declare
+begin
+    if ($WHP_Living(Caster) == FALSE) return FALSE;
+    if (Caster's "Title" != "Solarus") return FALSE;
+    if ($InsideBuilding(Caster)) return FALSE;
+    if ($GetAttribute(Caster, #ATTRIB_ExperienceLevel) < #WHP_DawnfallLevel) return FALSE;
+    if ($WHP_DawnfallChapterReady(Caster) == FALSE) return FALSE;
+    if ($IsSpellAvailable(Caster,"WHP_DawnfallCast") == FALSE) return FALSE;
+    if ($CheckEffector(Caster, "WHP_DawnfallCooldown")) return FALSE;
+    return TRUE;
+end
+
+function WHP_DawnfallMarkedTarget(agent Caster, agent Target) is boolean
+declare
+    agent Hunter;
+    boolean Found;
+begin
+    if ($WHP_Living(Target) == FALSE) return FALSE;
+    if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return FALSE;
+    if ($HasAttribute("WHP_MarkOwners", Target) == FALSE) return FALSE;
+    foreach Hunter in Target's "WHP_MarkOwners" do
+        if ($WHP_OwnsMark(Hunter, Target))
+            if ($GetUnitPlayerNumber(Hunter) == $GetUnitPlayerNumber(Caster)) Found = TRUE;
+    return Found;
+end
+
+function WHP_DawnfallTarget(agent Caster, agent Target) is boolean
+declare
+    integer Distance;
+begin
+    if ($WHP_DawnfallCaster(Caster) == FALSE) return FALSE;
+    if ($WHP_Living(Target) == FALSE) return FALSE;
+    if ($InsideBuilding(Target)) return FALSE;
+    if ($GetUnitPlayerNumber(Caster) == $GetUnitPlayerNumber(Target)) return FALSE;
+    if ($GetPlayerTeamNumber(Caster) == $GetPlayerTeamNumber(Target)) return FALSE;
+    Distance = $DistanceBetweenAgents(Caster, Target);
+    if (Distance <= #WHP_DawnfallMinRange) return FALSE;
+    // Already chosen target: direct authorization, no discovery/range/desire query.
+    if (Target's "Type" == "Lair")
+        return $WHP_BreachActive(Target, $GetUnitPlayerNumber(Caster));
+    return $WHP_DawnfallMarkedTarget(Caster, Target);
+end

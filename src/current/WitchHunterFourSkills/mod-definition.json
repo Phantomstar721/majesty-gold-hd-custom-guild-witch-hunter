@@ -1,0 +1,627 @@
+{
+  "schema_version": 3,
+  "mod_id": "{ff8086be-49f0-4ee2-9c79-3d85a2a57c13}",
+  "internal_name": "WitchHunterFourSkills",
+  "display_name": "Custom Guild: Witch Hunters",
+  "custom_buildings": [
+    {
+      "local_name": "WHP_Chapterhouse",
+      "controller_base": "AP07",
+      "panel_resource_template": "AP10"
+    },
+    {
+      "local_name": "WHP_SilverWorkshop",
+      "controller_base": "AP10",
+      "panel_resource_template": "AP10"
+    }
+  ],
+  "runtime_features": [
+    {
+      "type": "stock.gplmx-purchase-equipment-tail.v1",
+      "callback_key": "whp.workshop-purchases",
+      "callback_symbol": "WHP_PurchaseChoice"
+    },
+    {
+      "type": "stock.hero-quest-participant.v1",
+      "feature_key": "whp.ranger-quests",
+      "hero_script": "WHP_HunterTree",
+      "stock_hero_script": "mx_ranger"
+    },
+    {
+      "type": "stock.ap10-ap69-secondary-panel.v1",
+      "panel_key": "whp.workshop-research",
+      "parent_building": "WHP_SilverWorkshop",
+      "source_dialog_id": "WSRP",
+      "building_family_id": "WSW",
+      "open_command_id": 8009
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-research",
+      "recipe_key": "whp.refined",
+      "action_control_id": 30208,
+      "descriptor_template_control_id": 5000,
+      "completion_template_control_id": 5000,
+      "required_level": 1,
+      "price": 300,
+      "price_control_id": 31208,
+      "progress_control_id": 30209,
+      "active_display_control_id": 30210,
+      "icon_control_id": 30708,
+      "completion_text": "Refined Silver"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-research",
+      "recipe_key": "whp.salts",
+      "action_control_id": 30212,
+      "descriptor_template_control_id": 5001,
+      "completion_template_control_id": 5001,
+      "required_level": 1,
+      "price": 200,
+      "price_control_id": 31212,
+      "progress_control_id": 30213,
+      "active_display_control_id": 30214,
+      "icon_control_id": 30712,
+      "completion_text": "Silver Salts"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-research",
+      "recipe_key": "whp.inlays",
+      "action_control_id": 30216,
+      "descriptor_template_control_id": 5002,
+      "completion_template_control_id": 5002,
+      "required_level": 2,
+      "price": 600,
+      "price_control_id": 31216,
+      "progress_control_id": 30217,
+      "active_display_control_id": 30218,
+      "icon_control_id": 30716,
+      "completion_text": "Silver Inlays"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-research",
+      "recipe_key": "whp.sunhammer",
+      "action_control_id": 30220,
+      "descriptor_template_control_id": 5003,
+      "completion_template_control_id": 5003,
+      "required_level": 2,
+      "price": 750,
+      "price_control_id": 31220,
+      "progress_control_id": 30221,
+      "active_display_control_id": 30222,
+      "icon_control_id": 30720,
+      "completion_text": "Argent Sunmace"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-fittings",
+      "recipe_key": "whp.embersteel",
+      "action_control_id": 30224,
+      "descriptor_template_control_id": 5004,
+      "completion_template_control_id": 5004,
+      "required_level": 3,
+      "price": 750,
+      "price_control_id": 31224,
+      "progress_control_id": 30225,
+      "active_display_control_id": 30226,
+      "icon_control_id": 30724,
+      "completion_text": "Embersteel Hatchet"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-research",
+      "recipe_key": "whp.bastion",
+      "action_control_id": 30228,
+      "descriptor_template_control_id": 5005,
+      "completion_template_control_id": 5005,
+      "required_level": 3,
+      "price": 600,
+      "price_control_id": 31228,
+      "progress_control_id": 30229,
+      "active_display_control_id": 30230,
+      "icon_control_id": 30728,
+      "completion_text": "Silver Bastion"
+    },
+    {
+      "type": "stock.attack-projectile-observation.v1",
+      "feature_key": "whp.attack-observation",
+      "api_prefix": "WHP",
+      "actor": "Witch_Hunter_Prototype",
+      "action": "WHP_Bolt",
+      "projectile": "Red_Rogue_Bolt",
+      "release_callback_symbol": "WHP_BoltReleased"
+    },
+    {
+      "feature_key": "dawnfall",
+      "api_prefix": "WHP_Dawnfall",
+      "actor": "Solarus",
+      "action": "WHP_DawnfallCast",
+      "release_callback_symbol": "WHP_DawnfallRelease",
+      "movement_callback_symbol": "WHP_DawnfallMove",
+      "maximum_range": 2097120,
+      "type": "stock.checked-placement.v3",
+      "arrival_action": "WHP_DawnfallArrival",
+      "required_level": 6
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-mark",
+      "kind": "passive",
+      "subject_id": "WHP1",
+      "unlock_level": 1,
+      "display_text": "Hunter's Mark",
+      "tooltip_text": "Hits on the Hunter's quarry reduce Dodge and Parry by up to 10 for 12 seconds. Further hits renew the mark.",
+      "image_id": "WImk",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-silver",
+      "kind": "passive",
+      "subject_id": "WHP1",
+      "unlock_level": 3,
+      "display_text": "Silver Bolt",
+      "tooltip_text": "A silver crossbow bolt burns its target for 2 damage every 2 seconds, three times, and strips Magic Mirror or Damage Shield. Recharges in 15 seconds. Refined Silver strengthens the burn.",
+      "image_id": "WIsl",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-sunder",
+      "kind": "passive",
+      "subject_id": "WHP1",
+      "unlock_level": 5,
+      "display_text": "Weakening Strike",
+      "tooltip_text": "Hatchet hits reduce the damage an enemy deals by 25% for 6 seconds. Further hatchet hits renew the effect. Only one strike effect applies at a time.",
+      "image_id": "WIsu",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-ward",
+      "kind": "passive",
+      "subject_id": "WHP1",
+      "unlock_level": 8,
+      "display_text": "Witch Ward",
+      "tooltip_text": "After surviving a direct hit from her marked quarry, the Hunter reduces further direct damage by 30% and gains 20 Magic Resistance for 6 seconds. Recharges in 12 seconds.",
+      "image_id": "WIwd",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap10-ap69-secondary-panel.v1",
+      "panel_key": "whp.chapter-spells",
+      "parent_building": "WHP_Chapterhouse",
+      "source_dialog_id": "WCBR",
+      "building_family_id": "WCH",
+      "open_command_id": 8009
+    },
+    {
+      "type": "stock.ap69-sovereign-target-action.v3",
+      "panel_key": "whp.chapter-spells",
+      "action_key": "breach-the-den",
+      "visual_control_id": 4403,
+      "private_control_id": 31248,
+      "visual_template_control_id": 4403,
+      "target_template_control_id": 4408,
+      "stock_target_mode": "Sp29",
+      "stock_executor_mode": "Sp14",
+      "private_mode": "WhB1",
+      "private_unit_id": "WHBS",
+      "cursor_ordinal": 45,
+      "required_level": 2,
+      "sovereign_gold_cost": 500,
+      "callback_symbol": "WHP_BreachPaid",
+      "icon_control_id": 5403,
+      "price_control_id": 3403
+    },
+    {
+      "type": "stock.ap78-saved-attribute-row.v1",
+      "feature_key": "whp-owned-inlays",
+      "attribute_symbol": "WHP_Inlays",
+      "display_text": "Silver Inlays",
+      "tooltip_text": "Weapon strikes ignore up to 2 points of armor protection, or 4 against undead.",
+      "image_id": "WIin",
+      "image_set": 1019,
+      "list_category": "enchantments"
+    },
+    {
+      "type": "stock.ap78-saved-attribute-row.v1",
+      "feature_key": "whp-owned-embersteel",
+      "attribute_symbol": "WHP_Embersteel",
+      "display_text": "Embersteel Hatchet",
+      "tooltip_text": "A hatchet hit on the Hunter's marked quarry consumes her Silver Burn, dealing its remaining damage plus 2.",
+      "image_id": "WIem",
+      "image_set": 1019,
+      "list_category": "enchantments"
+    },
+    {
+      "type": "stock.ap78-saved-attribute-row.v1",
+      "feature_key": "whp-owned-sunhammer",
+      "attribute_symbol": "WHP_Sunhammer",
+      "display_text": "Argent Sunmace",
+      "tooltip_text": "A Solarii's fire spells charge her next successful melee strike with 5 fire damage, or 10 against undead. Armor can reduce this damage.",
+      "image_id": "WIsh",
+      "image_set": 1019,
+      "list_category": "enchantments"
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-mark",
+      "kind": "enchantment",
+      "subject_id": "WH00",
+      "unlock_level": 0,
+      "display_text": "Hunter's Mark",
+      "tooltip_text": "Dodge and Parry are reduced by up to 10 for 12 seconds. Hits from the marking Hunter renew it.",
+      "image_id": "WXmk",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-burn",
+      "kind": "enchantment",
+      "subject_id": "WH06",
+      "unlock_level": 0,
+      "display_text": "Silver Burn",
+      "tooltip_text": "Silver fire deals damage every 2 seconds. Refined Silver strengthens the flames, and allied Solarii fire can renew them.",
+      "image_id": "WXbu",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-sunder",
+      "kind": "enchantment",
+      "subject_id": "WH02",
+      "unlock_level": 0,
+      "display_text": "Weakening Strike",
+      "tooltip_text": "Deals 25% less damage for 6 seconds.",
+      "image_id": "WXsu",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-ward",
+      "kind": "enchantment",
+      "subject_id": "WH03",
+      "unlock_level": 0,
+      "display_text": "Witch Ward",
+      "tooltip_text": "Takes 30% less direct damage and gains 20 Magic Resistance for 6 seconds.",
+      "image_id": "WXwa",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.name-generator.v1",
+      "generator_id": "NMWH",
+      "name_tables": [
+        "HNW0",
+        "HNW1",
+        "HNW2",
+        "HNW3"
+      ]
+    },
+    {
+      "type": "stock.equipment.v1",
+      "feature_key": "witch-hunter-crossbow-hatchet",
+      "slot": "weapon",
+      "name_table": "WHEN",
+      "image_id": "WHEI",
+      "image_set": 1004,
+      "hero_ids": [
+        "WHP1"
+      ]
+    },
+    {
+      "type": "stock.damage-contribution.v1",
+      "feature_key": "whp.damage",
+      "callbacks": {
+        "weapon_pre_armor": "WHP_WeaponPreArmor",
+        "weapon_building_full": "WHP_BreachAllows",
+        "weapon_blocked": "WHP_WeaponBlocked",
+        "weapon_percent_reduce": "WHP_WeaponPercentReduce",
+        "spell_percent_reduce": "WHP_SpellPercentReduce",
+        "after_hp": "WHP_AfterDirectDamage",
+        "spell_damage_scale": "WHP_SpellDamageScale"
+      }
+    },
+    {
+      "type": "stock.building-employment.v1",
+      "feature_key": "whp.crucible-employment",
+      "api_prefix": "WHP_CrucibleHire",
+      "parent_building": "WHP_SilverWorkshop",
+      "hero_titles": [
+        "Witch_Hunter_Prototype"
+      ],
+      "minimum_level": 8,
+      "source_dialog_id": "WSHR",
+      "open_command_id": 31300,
+      "gated_control_ids": [
+        8009,
+        8021,
+        31700,
+        31720
+      ],
+      "eligibility_callback_symbol": "WHP_CrucibleHireEligible",
+      "cleanup_callback_symbol": "WHP_CrucibleHireCleanup",
+      "visitor_callback_symbol": "WHP_WorkshopVisited",
+      "travel_text": "Going to the Argent Crucible"
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-dawnfall-learned",
+      "kind": "spell",
+      "subject_id": "WHDF",
+      "unlock_level": 0,
+      "display_text": "Dawnfall",
+      "tooltip_text": "Leap across the realm to an enemy marked by a Witch Hunter or a lair affected by Breach the Den. Requires level 6 and a completed level 3 Chapterhouse. Recharges for 30 seconds after arrival.",
+      "image_id": "WIdf",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap92-sovereign-toolbar-action.v1",
+      "panel_key": "whp.chapter-spells",
+      "action_key": "breach-the-den",
+      "required_level": 3,
+      "icon_id": "WBTb",
+      "icon_set": 1001,
+      "hover_text": "Cast Breach the Den."
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-sundering-shot",
+      "kind": "passive",
+      "subject_id": "WHP1",
+      "unlock_level": 5,
+      "display_text": "Sundering Shot",
+      "tooltip_text": "Crossbow hits make an enemy take 25% more damage for 6 seconds. Further crossbow hits renew the effect. Only one strike effect applies at a time.",
+      "image_id": "WIsu",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-sundering-shot",
+      "kind": "enchantment",
+      "subject_id": "WH0B",
+      "unlock_level": 0,
+      "display_text": "Sundering Shot",
+      "tooltip_text": "Takes 25% more damage for 6 seconds.",
+      "image_id": "WXsu",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.hero-combat-policy.v1",
+      "feature_key": "whp.combat-policy",
+      "hero_title": "Witch_Hunter_Prototype",
+      "marker_attribute": "WHP_Prototype",
+      "paired_accuracy": true,
+      "level_callback_symbol": "WHP_LevelChanged",
+      "confidence_callback_symbol": "WHP_SpellConfidence",
+      "hostile_multiplier_callback_symbol": "WHP_HostileMultiplier",
+      "melee_accuracy_per_level": 2,
+      "ranged_accuracy_per_level": 1
+    },
+    {
+      "type": "manager.overlay-movement-scale.v1",
+      "overlay_id": "WH0C",
+      "percent": 80
+    },
+    {
+      "type": "stock.ap10-ap69-secondary-panel.v1",
+      "panel_key": "whp.workshop-fittings",
+      "parent_building": "WHP_SilverWorkshop",
+      "source_dialog_id": "WSF2",
+      "building_family_id": "WSW",
+      "open_command_id": 31700
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-fittings",
+      "recipe_key": "whp.nightglass",
+      "action_control_id": 30400,
+      "descriptor_template_control_id": 5000,
+      "completion_template_control_id": 5010,
+      "required_level": 1,
+      "price": 400,
+      "price_control_id": 31400,
+      "progress_control_id": 30401,
+      "active_display_control_id": 30402,
+      "icon_control_id": 30900,
+      "completion_text": "Nightglass Lenses"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-fittings",
+      "recipe_key": "whp.windlass",
+      "action_control_id": 30404,
+      "descriptor_template_control_id": 5002,
+      "completion_template_control_id": 5020,
+      "required_level": 2,
+      "price": 650,
+      "price_control_id": 31404,
+      "progress_control_id": 30405,
+      "active_display_control_id": 30406,
+      "icon_control_id": 30904,
+      "completion_text": "Windlass Assembly"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-fittings",
+      "recipe_key": "whp.gravebind",
+      "action_control_id": 30408,
+      "descriptor_template_control_id": 5004,
+      "completion_template_control_id": 5021,
+      "required_level": 3,
+      "price": 900,
+      "price_control_id": 31408,
+      "progress_control_id": 30409,
+      "active_display_control_id": 30410,
+      "icon_control_id": 30908,
+      "completion_text": "Gravebind Silver"
+    },
+    {
+      "type": "stock.ap78-saved-attribute-row.v1",
+      "feature_key": "whp-owned-nightglass",
+      "attribute_symbol": "WHP_Nightglass",
+      "display_text": "Nightglass Lenses",
+      "tooltip_text": "Increases sight by 40.",
+      "image_id": "WInl",
+      "image_set": 1019,
+      "list_category": "enchantments"
+    },
+    {
+      "type": "stock.ap78-saved-attribute-row.v1",
+      "feature_key": "whp-owned-windlass",
+      "attribute_symbol": "WHP_Windlass",
+      "display_text": "Windlass Assembly",
+      "tooltip_text": "Increases crossbow range by 40.",
+      "image_id": "WIwl",
+      "image_set": 1019,
+      "list_category": "enchantments"
+    },
+    {
+      "type": "stock.ap78-saved-attribute-row.v1",
+      "feature_key": "whp-owned-gravebind",
+      "attribute_symbol": "WHP_Gravebind",
+      "display_text": "Gravebind Silver",
+      "tooltip_text": "Hunter's Mark slows movement by 20% for 12 seconds. Further hits renew it.",
+      "image_id": "WIgr",
+      "image_set": 1019,
+      "list_category": "enchantments"
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-gravebind",
+      "kind": "enchantment",
+      "subject_id": "WH0C",
+      "unlock_level": 0,
+      "display_text": "Gravebound",
+      "tooltip_text": "Movement speed is reduced by 20%.",
+      "image_id": "WIgr",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.ap78-info-row.v1",
+      "feature_key": "whp-status-salts-protection",
+      "kind": "enchantment",
+      "subject_id": "WH0D",
+      "unlock_level": 0,
+      "display_text": "Silver Salts protection",
+      "tooltip_text": "Immune to Ratman Plague.",
+      "image_id": "WIsa",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.inventory-death-drop-exclusion.v1",
+      "feature_key": "whp.salts-nondrop",
+      "item_expression": "#WHP_SaltsItem"
+    },
+    {
+      "type": "stock.inventory-item-display.v1",
+      "feature_key": "silver-salts-item",
+      "item_id": 114,
+      "display_text": "Silver Salts",
+      "tooltip_text": "Cures Ratman Plague and prevents infection for 60 seconds.",
+      "image_id": "WSsi",
+      "image_set": 1019
+    },
+    {
+      "type": "stock.gameplay-event-observer.v1",
+      "feature_key": "salts-status-response",
+      "event": "status-applied",
+      "callback_symbol": "WHP_StatusApplied"
+    },
+    {
+      "type": "stock.optional-boolean-dispatch.v1",
+      "feature_key": "whp_plague_cleanse_dispatch",
+      "attribute": "KingdomPlagueCleanse",
+      "parameter_types": [
+        "agent",
+        "integer",
+        "boolean"
+      ],
+      "dispatch_symbol": "WHP_RequestPlagueCleanse"
+    },
+    {
+      "type": "stock.ap10-ap69-secondary-panel.v1",
+      "panel_key": "whp.workshop-plague",
+      "parent_building": "WHP_SilverWorkshop",
+      "source_dialog_id": "WSPG",
+      "building_family_id": "WSW",
+      "open_command_id": 31720,
+      "required_level": 3,
+      "eligibility_callback_symbol": "WHP_PlagueAvailable",
+      "cooldown_remaining_callback_symbol": "WHP_PlagueRechargeRemaining",
+      "cooldown_duration_ms": 300000,
+      "cooldown_progress_control_id": 31920,
+      "cooldown_text_control_id": 31921
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-plague",
+      "recipe_key": "whp.purge",
+      "action_control_id": 31900,
+      "descriptor_template_control_id": 5000,
+      "completion_template_control_id": 5000,
+      "required_level": 3,
+      "price": 0,
+      "price_control_id": 32900,
+      "progress_control_id": 31901,
+      "active_display_control_id": 31902,
+      "icon_control_id": 0,
+      "completion_text": "Purge",
+      "charge_ms": 30000,
+      "readiness_callback_symbol": "WHP_PurgeReady",
+      "completion_callback_symbol": "WHP_PurgePlague"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "whp.workshop-plague",
+      "recipe_key": "whp.cleanse",
+      "action_control_id": 31904,
+      "descriptor_template_control_id": 5000,
+      "completion_template_control_id": 5000,
+      "required_level": 3,
+      "price": 0,
+      "price_control_id": 32904,
+      "progress_control_id": 31907,
+      "active_display_control_id": 31908,
+      "icon_control_id": 0,
+      "completion_text": "Cleanse",
+      "charge_ms": 30000,
+      "readiness_callback_symbol": "WHP_CleanseReady",
+      "completion_callback_symbol": "WHP_CleanseCharged",
+      "quote_callback_symbol": "WHP_CleanseQuote",
+      "start_callback_symbol": "WHP_CleanseStart"
+    },
+    {
+      "type": "stock.native-timing.v1",
+      "spell_ids": [],
+      "effector_ids": [
+        "WH0E"
+      ]
+    }
+  ],
+  "external_patches": [
+    {
+      "service": "window-engine.v1",
+      "minimum_revision": 2
+    }
+  ],
+  "source_contributions": [
+    {
+      "type": "stock.reward-selection.v1",
+      "feature_key": "whp.reward-selection",
+      "callbacks": {
+        "attack_distance": "WHP_RewardAttackDistance",
+        "target_evaluation": "WHP_RewardTargetEvaluation",
+        "flag_incentive": "WHP_RewardFlagIncentive",
+        "extra_candidates": "WHP_RewardExtraCandidates",
+        "extra_eligible": "WHP_RewardExtraEligible",
+        "extra_score": "WHP_RewardExtraScore"
+      },
+      "extra_dispatch": "stock.raid_lair",
+      "suppress_player_attack_flags": "eligible"
+    }
+  ]
+}

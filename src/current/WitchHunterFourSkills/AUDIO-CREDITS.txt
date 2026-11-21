@@ -1,0 +1,21 @@
+Chapterhouse selection audio
+
+Bamboo Creaking in the Wind by Yoyodaman234
+https://freesound.org/people/Yoyodaman234/sounds/667575/
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+ArrowHit01.mp3 by Yap_Audio_Production
+https://freesound.org/people/Yap_Audio_Production/sounds/218464/
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+
+Adaptation: public HQ previews converted to mono22050Hz16bitPCM; bird excerpt52-55s and arrow excerpt1s-end layered at the same start; playback speed increased30%; bird+3dB with light high-pass/FFT noise reduction, arrow-2dB; final0.81s removed in two trims and5ms ending fade. No endorsement implied.
+
+Breach the Den cast
+rock_impact_crash_sounds_08022026 by Artninja
+https://freesound.org/people/Artninja/sounds/865325/
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Changes: public HQ preview excerpt trimmed, mono 22050Hz 16-bit PCM conversion, level adjustment and short edge fades. No endorsement implied.
+
+Witch Hunter voice
+Char C
+https://www.fiverr.com/chardoesva

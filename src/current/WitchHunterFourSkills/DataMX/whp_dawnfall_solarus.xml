@@ -1,0 +1,44 @@
+<Majesty>
+  <Description type="Unit" subType="Character" ID="AVK1" Name="Solarus" Description="Solarus">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="6" />
+      <ImageIDBase value="WDSO" />
+      <Attachment kind="Movement" type="Walk" ID="Class 2" />
+      <DefaultSound value="Solarus" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="AP20" />
+      <Cost value="500" />
+      <Experience value="1000" />
+      <MaxHP value="25" />
+      <SightRange value="200" />
+      <Speed value="2" />
+      <AttackRange min="1" max="1" />
+      <Vitality value="18" />
+      <Artifice value="6" />
+      <WillPower value="15" />
+      <Intelligence value="16" />
+      <Strength value="19" />
+      <Attack value="85" />
+      <Parry value="55" />
+      <Dodge value="60" />
+      <WeaponBasicDamage value="12" />
+      <ArmorBasicDamage value="6" />
+      <RecruitDelay value="12000" />
+      <PrimaryStat value="3" />
+      <NameGenType value="NM14" />
+      <Flags value="Heals" />
+      <Flags value="HasHPBar" />
+      <Flags value="CanHighlight" />
+      <HelpID value="h018" />
+      <AllowedWeapon value="Mace" />
+      <AllowedArmor value="Chain" />
+      <AllowedSpells>
+        <Spell ID="0" Value="Fire_Hammer_Spell" />
+        <Spell ID="1" Value="sun_scorch" />
+      </AllowedSpells>
+    </Game>
+  </Description>
+</Majesty>

@@ -1,0 +1,47 @@
+function Guild_Title ( agent thisagent ) is string
+///////////////////////////////////////////////////////////////
+// This function is passed a hero agent and returns the correct
+// guild title string for that hero type.
+///////////////////////////////////////////////////////////////
+declare
+begin
+
+	if ( ThisAgent's "title" == "Adept" )
+		return "Temple_Lunord";
+	else if ( ThisAgent's "title" == "Barbarian" )
+		return "Temple_Krolm";
+	else if ( ThisAgent's "title" == "Cultist" )
+		return "Temple_Fervus";
+	else if ( ThisAgent's "title" == "Dwarf" )
+		return "Dwarven_Settlement";
+	else if ( ThisAgent's "title" == "Elf" )
+		return "Elven_Bungalow";
+	else if ( ThisAgent's "title" == "Gnome" )
+		return "Gnome_Hovel";
+	else if ( ThisAgent's "title" == "Healer" )
+		return "Temple_Agrela";
+	else if ( ThisAgent's "title" == "Monk" )
+		return "Temple_Dauros";
+	else if ( ThisAgent's "title" == "Paladin" )
+		return "Warriors_Guild";
+	else if ( ThisAgent's "title" == "Priestess" )
+		return "Temple_Krypta";
+	else if ( ThisAgent's "title" == "Ranger" )
+		return "Rangers_Guild";
+	else if ( ThisAgent's "title" == "Rogue" )
+		return "Rogues_Guild";
+	else if ( ThisAgent's "title" == "Solarus" )
+		return "Temple_Helia";
+	else if ( ThisAgent's "title" == "Warrior" )
+		return "Warriors_Guild";
+	else if ( ThisAgent's "title" == "Warrior_of_Discord" )
+		return "Warriors_Guild";
+	else if ( ThisAgent's "title" == "Wizard" )
+		return "Wizards_Guild";
+	else
+		begin
+			if (ThisAgent's "title" == "Witch_Hunter_Prototype") return "WHP_Chapterhouse";
+			$debugout ( 911, "No guild type found for hero!?" );
+			return "No guild type found...";
+		end
+end

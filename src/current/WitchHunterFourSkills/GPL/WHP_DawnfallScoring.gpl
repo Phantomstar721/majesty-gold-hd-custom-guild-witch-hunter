@@ -1,0 +1,24 @@
+// Pure candidate admission: no target edit, cast, payment or cooldown mutation.
+function WHP_DawnfallCanReach(agent Caster, agent Target) is boolean
+declare
+begin
+    if (Caster's "Title" != "Solarus") return FALSE;
+    if ($HasWayPoints(Caster)) return FALSE;
+    if ($WHP_DawnfallProviderReady(Caster) != 1) return FALSE;
+    if ($WHP_DawnfallTarget(Caster, Target) == FALSE) return FALSE;
+    return $WHP_DawnfallProviderBoundary(Caster, Target, 0);
+end
+
+// Retain shared combat evaluation; replace only its stock distance penalty.
+function WHP_DawnfallTargetScore(agent Caster, agent Target, boolean CanDawnfall) is integer
+declare
+    integer Score;
+begin
+    Score = $Target_Eval(Caster, Target);
+    if (CanDawnfall)
+        begin
+            Score += $DistanceBetweenAgents(Caster, Target) / 250;
+            Score -= #WHP_DawnfallScoringDistance / 250;
+        end
+    return Score;
+end

@@ -1,0 +1,38 @@
+// Callbacks on stock source-composed level/evaluation boundaries only.
+function WHP_LevelChanged(agent Hunter, integer Direction)
+declare
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    // Assignment, never an accuracy award; no load-time replay or guessed backfill.
+    Hunter's "PercentageHPRetreat" = 35;
+    if ($GetAttribute(Hunter, #ATTRIB_ExperienceLevel) >= 8)
+        Hunter's "PercentageHPRetreat" = 25;
+end
+
+function WHP_SpellConfidence(agent Hunter) is integer
+declare
+    integer Value, Level;
+begin
+    if ($WHP_HeroLevel(Hunter, 1) == FALSE) return 0;
+    Level = $GetAttribute(Hunter, #ATTRIB_ExperienceLevel);
+    Value = 10;
+    if (Level >= 3) Value += 20;
+    // Two half-weight level-5 skills contribute one normal 30-point allowance.
+    if (Level >= 5) Value += 15 + 15;
+    if (Level >= 8) Value += 5;
+    return Value;
+end
+
+function WHP_HostileMultiplier(agent Hunter, agent Hostile) is float
+declare
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return 1.0;
+    if ($WHP_Living(Hostile) == FALSE) return 1.0;
+    // Do not call PreferredPrey: it calls Target_Eval and would recurse here.
+    if ($WHP_IsUndead(Hostile)) return 0.6;
+    // Stock Egetattackrange/gettargetrange distinguish heroes and monsters
+    // from buildings/lairs before character-only combat queries.
+    if ((Hostile's "Type" != "Hero") && (Hostile's "Type" != "Monster")) return 1.0;
+    if ($GetBestSpell(Hostile, #List_Attack) != "nothing") return 0.6;
+    return 1.0;
+end

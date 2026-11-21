@@ -1,0 +1,2178 @@
+// 32 serialized slots, full-ID search and free allocation. Never modulo overwrite.
+function WHP_FindShot(agent Hunter, integer Shot) is integer
+declare
+begin
+    if (Shot <= 0) return -1;
+    if ($HasAttribute("WHP_Shot0Id", Hunter))
+        if (Hunter's "WHP_Shot0Id" == Shot) return 0;
+    if ($HasAttribute("WHP_Shot1Id", Hunter))
+        if (Hunter's "WHP_Shot1Id" == Shot) return 1;
+    if ($HasAttribute("WHP_Shot2Id", Hunter))
+        if (Hunter's "WHP_Shot2Id" == Shot) return 2;
+    if ($HasAttribute("WHP_Shot3Id", Hunter))
+        if (Hunter's "WHP_Shot3Id" == Shot) return 3;
+    if ($HasAttribute("WHP_Shot4Id", Hunter))
+        if (Hunter's "WHP_Shot4Id" == Shot) return 4;
+    if ($HasAttribute("WHP_Shot5Id", Hunter))
+        if (Hunter's "WHP_Shot5Id" == Shot) return 5;
+    if ($HasAttribute("WHP_Shot6Id", Hunter))
+        if (Hunter's "WHP_Shot6Id" == Shot) return 6;
+    if ($HasAttribute("WHP_Shot7Id", Hunter))
+        if (Hunter's "WHP_Shot7Id" == Shot) return 7;
+    if ($HasAttribute("WHP_Shot8Id", Hunter))
+        if (Hunter's "WHP_Shot8Id" == Shot) return 8;
+    if ($HasAttribute("WHP_Shot9Id", Hunter))
+        if (Hunter's "WHP_Shot9Id" == Shot) return 9;
+    if ($HasAttribute("WHP_Shot10Id", Hunter))
+        if (Hunter's "WHP_Shot10Id" == Shot) return 10;
+    if ($HasAttribute("WHP_Shot11Id", Hunter))
+        if (Hunter's "WHP_Shot11Id" == Shot) return 11;
+    if ($HasAttribute("WHP_Shot12Id", Hunter))
+        if (Hunter's "WHP_Shot12Id" == Shot) return 12;
+    if ($HasAttribute("WHP_Shot13Id", Hunter))
+        if (Hunter's "WHP_Shot13Id" == Shot) return 13;
+    if ($HasAttribute("WHP_Shot14Id", Hunter))
+        if (Hunter's "WHP_Shot14Id" == Shot) return 14;
+    if ($HasAttribute("WHP_Shot15Id", Hunter))
+        if (Hunter's "WHP_Shot15Id" == Shot) return 15;
+    if ($HasAttribute("WHP_Shot16Id", Hunter))
+        if (Hunter's "WHP_Shot16Id" == Shot) return 16;
+    if ($HasAttribute("WHP_Shot17Id", Hunter))
+        if (Hunter's "WHP_Shot17Id" == Shot) return 17;
+    if ($HasAttribute("WHP_Shot18Id", Hunter))
+        if (Hunter's "WHP_Shot18Id" == Shot) return 18;
+    if ($HasAttribute("WHP_Shot19Id", Hunter))
+        if (Hunter's "WHP_Shot19Id" == Shot) return 19;
+    if ($HasAttribute("WHP_Shot20Id", Hunter))
+        if (Hunter's "WHP_Shot20Id" == Shot) return 20;
+    if ($HasAttribute("WHP_Shot21Id", Hunter))
+        if (Hunter's "WHP_Shot21Id" == Shot) return 21;
+    if ($HasAttribute("WHP_Shot22Id", Hunter))
+        if (Hunter's "WHP_Shot22Id" == Shot) return 22;
+    if ($HasAttribute("WHP_Shot23Id", Hunter))
+        if (Hunter's "WHP_Shot23Id" == Shot) return 23;
+    if ($HasAttribute("WHP_Shot24Id", Hunter))
+        if (Hunter's "WHP_Shot24Id" == Shot) return 24;
+    if ($HasAttribute("WHP_Shot25Id", Hunter))
+        if (Hunter's "WHP_Shot25Id" == Shot) return 25;
+    if ($HasAttribute("WHP_Shot26Id", Hunter))
+        if (Hunter's "WHP_Shot26Id" == Shot) return 26;
+    if ($HasAttribute("WHP_Shot27Id", Hunter))
+        if (Hunter's "WHP_Shot27Id" == Shot) return 27;
+    if ($HasAttribute("WHP_Shot28Id", Hunter))
+        if (Hunter's "WHP_Shot28Id" == Shot) return 28;
+    if ($HasAttribute("WHP_Shot29Id", Hunter))
+        if (Hunter's "WHP_Shot29Id" == Shot) return 29;
+    if ($HasAttribute("WHP_Shot30Id", Hunter))
+        if (Hunter's "WHP_Shot30Id" == Shot) return 30;
+    if ($HasAttribute("WHP_Shot31Id", Hunter))
+        if (Hunter's "WHP_Shot31Id" == Shot) return 31;
+    return -1;
+end
+
+function WHP_FreeShotSlot(agent Hunter) is integer
+declare
+begin
+    if ($HasAttribute("WHP_Shot0Id", Hunter) == FALSE) return 0;
+    if (Hunter's "WHP_Shot0Id" == 0) return 0;
+    if ($HasAttribute("WHP_Shot1Id", Hunter) == FALSE) return 1;
+    if (Hunter's "WHP_Shot1Id" == 0) return 1;
+    if ($HasAttribute("WHP_Shot2Id", Hunter) == FALSE) return 2;
+    if (Hunter's "WHP_Shot2Id" == 0) return 2;
+    if ($HasAttribute("WHP_Shot3Id", Hunter) == FALSE) return 3;
+    if (Hunter's "WHP_Shot3Id" == 0) return 3;
+    if ($HasAttribute("WHP_Shot4Id", Hunter) == FALSE) return 4;
+    if (Hunter's "WHP_Shot4Id" == 0) return 4;
+    if ($HasAttribute("WHP_Shot5Id", Hunter) == FALSE) return 5;
+    if (Hunter's "WHP_Shot5Id" == 0) return 5;
+    if ($HasAttribute("WHP_Shot6Id", Hunter) == FALSE) return 6;
+    if (Hunter's "WHP_Shot6Id" == 0) return 6;
+    if ($HasAttribute("WHP_Shot7Id", Hunter) == FALSE) return 7;
+    if (Hunter's "WHP_Shot7Id" == 0) return 7;
+    if ($HasAttribute("WHP_Shot8Id", Hunter) == FALSE) return 8;
+    if (Hunter's "WHP_Shot8Id" == 0) return 8;
+    if ($HasAttribute("WHP_Shot9Id", Hunter) == FALSE) return 9;
+    if (Hunter's "WHP_Shot9Id" == 0) return 9;
+    if ($HasAttribute("WHP_Shot10Id", Hunter) == FALSE) return 10;
+    if (Hunter's "WHP_Shot10Id" == 0) return 10;
+    if ($HasAttribute("WHP_Shot11Id", Hunter) == FALSE) return 11;
+    if (Hunter's "WHP_Shot11Id" == 0) return 11;
+    if ($HasAttribute("WHP_Shot12Id", Hunter) == FALSE) return 12;
+    if (Hunter's "WHP_Shot12Id" == 0) return 12;
+    if ($HasAttribute("WHP_Shot13Id", Hunter) == FALSE) return 13;
+    if (Hunter's "WHP_Shot13Id" == 0) return 13;
+    if ($HasAttribute("WHP_Shot14Id", Hunter) == FALSE) return 14;
+    if (Hunter's "WHP_Shot14Id" == 0) return 14;
+    if ($HasAttribute("WHP_Shot15Id", Hunter) == FALSE) return 15;
+    if (Hunter's "WHP_Shot15Id" == 0) return 15;
+    if ($HasAttribute("WHP_Shot16Id", Hunter) == FALSE) return 16;
+    if (Hunter's "WHP_Shot16Id" == 0) return 16;
+    if ($HasAttribute("WHP_Shot17Id", Hunter) == FALSE) return 17;
+    if (Hunter's "WHP_Shot17Id" == 0) return 17;
+    if ($HasAttribute("WHP_Shot18Id", Hunter) == FALSE) return 18;
+    if (Hunter's "WHP_Shot18Id" == 0) return 18;
+    if ($HasAttribute("WHP_Shot19Id", Hunter) == FALSE) return 19;
+    if (Hunter's "WHP_Shot19Id" == 0) return 19;
+    if ($HasAttribute("WHP_Shot20Id", Hunter) == FALSE) return 20;
+    if (Hunter's "WHP_Shot20Id" == 0) return 20;
+    if ($HasAttribute("WHP_Shot21Id", Hunter) == FALSE) return 21;
+    if (Hunter's "WHP_Shot21Id" == 0) return 21;
+    if ($HasAttribute("WHP_Shot22Id", Hunter) == FALSE) return 22;
+    if (Hunter's "WHP_Shot22Id" == 0) return 22;
+    if ($HasAttribute("WHP_Shot23Id", Hunter) == FALSE) return 23;
+    if (Hunter's "WHP_Shot23Id" == 0) return 23;
+    if ($HasAttribute("WHP_Shot24Id", Hunter) == FALSE) return 24;
+    if (Hunter's "WHP_Shot24Id" == 0) return 24;
+    if ($HasAttribute("WHP_Shot25Id", Hunter) == FALSE) return 25;
+    if (Hunter's "WHP_Shot25Id" == 0) return 25;
+    if ($HasAttribute("WHP_Shot26Id", Hunter) == FALSE) return 26;
+    if (Hunter's "WHP_Shot26Id" == 0) return 26;
+    if ($HasAttribute("WHP_Shot27Id", Hunter) == FALSE) return 27;
+    if (Hunter's "WHP_Shot27Id" == 0) return 27;
+    if ($HasAttribute("WHP_Shot28Id", Hunter) == FALSE) return 28;
+    if (Hunter's "WHP_Shot28Id" == 0) return 28;
+    if ($HasAttribute("WHP_Shot29Id", Hunter) == FALSE) return 29;
+    if (Hunter's "WHP_Shot29Id" == 0) return 29;
+    if ($HasAttribute("WHP_Shot30Id", Hunter) == FALSE) return 30;
+    if (Hunter's "WHP_Shot30Id" == 0) return 30;
+    if ($HasAttribute("WHP_Shot31Id", Hunter) == FALSE) return 31;
+    if (Hunter's "WHP_Shot31Id" == 0) return 31;
+    return -1;
+end
+
+function WHP_PruneShots(agent Hunter)
+declare
+    integer Snapshot, Shot, Pending;
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    // Consumption normally frees slots. A full store requests one native
+    // read-only snapshot outside release/impact, never one scan per slot.
+    if ($WHP_FreeShotSlot(Hunter) >= 0) return;
+    Snapshot = 0;
+    $WHP_BeginShotSnapshot(Snapshot, Hunter);
+    if (Snapshot <= 0) return;
+    if ($HasAttribute("WHP_Shot0Id", Hunter))
+        if (Hunter's "WHP_Shot0Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot0Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot0Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot1Id", Hunter))
+        if (Hunter's "WHP_Shot1Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot1Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot1Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot2Id", Hunter))
+        if (Hunter's "WHP_Shot2Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot2Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot2Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot3Id", Hunter))
+        if (Hunter's "WHP_Shot3Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot3Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot3Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot4Id", Hunter))
+        if (Hunter's "WHP_Shot4Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot4Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot4Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot5Id", Hunter))
+        if (Hunter's "WHP_Shot5Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot5Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot5Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot6Id", Hunter))
+        if (Hunter's "WHP_Shot6Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot6Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot6Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot7Id", Hunter))
+        if (Hunter's "WHP_Shot7Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot7Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot7Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot8Id", Hunter))
+        if (Hunter's "WHP_Shot8Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot8Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot8Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot9Id", Hunter))
+        if (Hunter's "WHP_Shot9Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot9Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot9Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot10Id", Hunter))
+        if (Hunter's "WHP_Shot10Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot10Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot10Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot11Id", Hunter))
+        if (Hunter's "WHP_Shot11Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot11Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot11Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot12Id", Hunter))
+        if (Hunter's "WHP_Shot12Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot12Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot12Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot13Id", Hunter))
+        if (Hunter's "WHP_Shot13Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot13Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot13Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot14Id", Hunter))
+        if (Hunter's "WHP_Shot14Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot14Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot14Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot15Id", Hunter))
+        if (Hunter's "WHP_Shot15Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot15Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot15Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot16Id", Hunter))
+        if (Hunter's "WHP_Shot16Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot16Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot16Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot17Id", Hunter))
+        if (Hunter's "WHP_Shot17Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot17Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot17Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot18Id", Hunter))
+        if (Hunter's "WHP_Shot18Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot18Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot18Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot19Id", Hunter))
+        if (Hunter's "WHP_Shot19Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot19Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot19Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot20Id", Hunter))
+        if (Hunter's "WHP_Shot20Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot20Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot20Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot21Id", Hunter))
+        if (Hunter's "WHP_Shot21Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot21Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot21Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot22Id", Hunter))
+        if (Hunter's "WHP_Shot22Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot22Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot22Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot23Id", Hunter))
+        if (Hunter's "WHP_Shot23Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot23Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot23Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot24Id", Hunter))
+        if (Hunter's "WHP_Shot24Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot24Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot24Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot25Id", Hunter))
+        if (Hunter's "WHP_Shot25Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot25Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot25Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot26Id", Hunter))
+        if (Hunter's "WHP_Shot26Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot26Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot26Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot27Id", Hunter))
+        if (Hunter's "WHP_Shot27Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot27Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot27Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot28Id", Hunter))
+        if (Hunter's "WHP_Shot28Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot28Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot28Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot29Id", Hunter))
+        if (Hunter's "WHP_Shot29Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot29Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot29Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot30Id", Hunter))
+        if (Hunter's "WHP_Shot30Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot30Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot30Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot31Id", Hunter))
+        if (Hunter's "WHP_Shot31Id" > 0)
+            begin
+                Shot = Hunter's "WHP_Shot31Id";
+                Pending = -1;
+                $WHP_ShotPending(Pending, Hunter, Shot, Snapshot);
+                if (Pending == 0) Hunter's "WHP_Shot31Id" = 0;
+            end
+    $WHP_EndShotSnapshot(Snapshot);
+end
+
+function WHP_PruneRetiredShots(agent Hunter, agent Target, integer Shot)
+declare
+    integer OldShot, Retired;
+begin
+    if ($HasAttribute("WHP_Shot0Id", Hunter))
+        if (Hunter's "WHP_Shot0Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot0Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot0Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot1Id", Hunter))
+        if (Hunter's "WHP_Shot1Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot1Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot1Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot2Id", Hunter))
+        if (Hunter's "WHP_Shot2Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot2Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot2Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot3Id", Hunter))
+        if (Hunter's "WHP_Shot3Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot3Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot3Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot4Id", Hunter))
+        if (Hunter's "WHP_Shot4Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot4Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot4Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot5Id", Hunter))
+        if (Hunter's "WHP_Shot5Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot5Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot5Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot6Id", Hunter))
+        if (Hunter's "WHP_Shot6Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot6Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot6Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot7Id", Hunter))
+        if (Hunter's "WHP_Shot7Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot7Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot7Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot8Id", Hunter))
+        if (Hunter's "WHP_Shot8Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot8Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot8Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot9Id", Hunter))
+        if (Hunter's "WHP_Shot9Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot9Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot9Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot10Id", Hunter))
+        if (Hunter's "WHP_Shot10Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot10Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot10Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot11Id", Hunter))
+        if (Hunter's "WHP_Shot11Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot11Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot11Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot12Id", Hunter))
+        if (Hunter's "WHP_Shot12Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot12Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot12Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot13Id", Hunter))
+        if (Hunter's "WHP_Shot13Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot13Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot13Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot14Id", Hunter))
+        if (Hunter's "WHP_Shot14Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot14Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot14Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot15Id", Hunter))
+        if (Hunter's "WHP_Shot15Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot15Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot15Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot16Id", Hunter))
+        if (Hunter's "WHP_Shot16Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot16Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot16Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot17Id", Hunter))
+        if (Hunter's "WHP_Shot17Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot17Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot17Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot18Id", Hunter))
+        if (Hunter's "WHP_Shot18Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot18Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot18Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot19Id", Hunter))
+        if (Hunter's "WHP_Shot19Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot19Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot19Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot20Id", Hunter))
+        if (Hunter's "WHP_Shot20Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot20Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot20Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot21Id", Hunter))
+        if (Hunter's "WHP_Shot21Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot21Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot21Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot22Id", Hunter))
+        if (Hunter's "WHP_Shot22Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot22Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot22Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot23Id", Hunter))
+        if (Hunter's "WHP_Shot23Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot23Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot23Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot24Id", Hunter))
+        if (Hunter's "WHP_Shot24Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot24Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot24Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot25Id", Hunter))
+        if (Hunter's "WHP_Shot25Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot25Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot25Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot26Id", Hunter))
+        if (Hunter's "WHP_Shot26Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot26Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot26Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot27Id", Hunter))
+        if (Hunter's "WHP_Shot27Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot27Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot27Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot28Id", Hunter))
+        if (Hunter's "WHP_Shot28Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot28Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot28Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot29Id", Hunter))
+        if (Hunter's "WHP_Shot29Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot29Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot29Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot30Id", Hunter))
+        if (Hunter's "WHP_Shot30Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot30Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot30Id" = 0;
+            end
+    if ($HasAttribute("WHP_Shot31Id", Hunter))
+        if (Hunter's "WHP_Shot31Id" > 0)
+            begin
+                OldShot = Hunter's "WHP_Shot31Id";
+                Retired = -1;
+                $WHP_ShotRetired(Retired, Hunter, Target, Shot, OldShot);
+                if (Retired == 1) Hunter's "WHP_Shot31Id" = 0;
+            end
+end
+
+function WHP_BoltReleased(agent Hunter, agent Target)
+declare
+    integer Shot, Slot, Epoch, Potency;
+    boolean Silver;
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    if ($WHP_Living(Hunter) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    Shot = 0;
+    $WHP_ReleaseId(Shot, Hunter, Target);
+    if (Shot <= 0) return;
+    if ($WHP_FindShot(Hunter, Shot) >= 0) return;
+    $WHP_SyncQuarry(Hunter, Hunter's "Target");
+    if ($HasAttribute("WHP_Epoch", Hunter) == FALSE) return;
+    Slot = $WHP_FreeShotSlot(Hunter);
+    if (Slot < 0)
+        begin
+            // Catch concrete retirements since the pre-attack snapshot.
+            $WHP_PruneRetiredShots(Hunter, Target, Shot);
+            Slot = $WHP_FreeShotSlot(Hunter);
+        end
+    if (Slot < 0)
+        begin
+            $WHP_PayloadFull(Hunter, Target, Shot);
+            return;
+        end
+    Epoch = -1;
+    if ((Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Epoch = Hunter's "WHP_Epoch";
+    Potency = $WHP_ReleasePotency(Hunter, Target);
+    Silver = FALSE;
+    if ($WHP_HeroLevel(Hunter, 3))
+      if ($CheckEffector(Hunter, "WHP_SilverCooldown") == FALSE)
+        begin
+            Silver = TRUE;
+            $CreateEffector(Hunter, "WHP_SilverCooldown", 15000);
+        end
+    if (Slot == 0)
+        begin
+            if ($HasAttribute("WHP_Shot0Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot0Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot0Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot0Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot0TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot0Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot0Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot0Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot0Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot0Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot0Potency" = Potency;
+            Hunter's "WHP_Shot0Id" = Shot;
+            Hunter's "WHP_Shot0Epoch" = Epoch;
+            Hunter's "WHP_Shot0Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot0TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot0Target" = Target;
+            Hunter's "WHP_Shot0Silver" = Silver;
+            Hunter's "WHP_Shot0Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 1)
+        begin
+            if ($HasAttribute("WHP_Shot1Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot1Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot1Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot1Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot1TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot1Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot1Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot1Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot1Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot1Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot1Potency" = Potency;
+            Hunter's "WHP_Shot1Id" = Shot;
+            Hunter's "WHP_Shot1Epoch" = Epoch;
+            Hunter's "WHP_Shot1Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot1TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot1Target" = Target;
+            Hunter's "WHP_Shot1Silver" = Silver;
+            Hunter's "WHP_Shot1Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 2)
+        begin
+            if ($HasAttribute("WHP_Shot2Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot2Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot2Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot2Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot2TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot2Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot2Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot2Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot2Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot2Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot2Potency" = Potency;
+            Hunter's "WHP_Shot2Id" = Shot;
+            Hunter's "WHP_Shot2Epoch" = Epoch;
+            Hunter's "WHP_Shot2Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot2TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot2Target" = Target;
+            Hunter's "WHP_Shot2Silver" = Silver;
+            Hunter's "WHP_Shot2Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 3)
+        begin
+            if ($HasAttribute("WHP_Shot3Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot3Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot3Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot3Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot3TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot3Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot3Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot3Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot3Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot3Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot3Potency" = Potency;
+            Hunter's "WHP_Shot3Id" = Shot;
+            Hunter's "WHP_Shot3Epoch" = Epoch;
+            Hunter's "WHP_Shot3Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot3TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot3Target" = Target;
+            Hunter's "WHP_Shot3Silver" = Silver;
+            Hunter's "WHP_Shot3Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 4)
+        begin
+            if ($HasAttribute("WHP_Shot4Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot4Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot4Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot4Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot4TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot4Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot4Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot4Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot4Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot4Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot4Potency" = Potency;
+            Hunter's "WHP_Shot4Id" = Shot;
+            Hunter's "WHP_Shot4Epoch" = Epoch;
+            Hunter's "WHP_Shot4Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot4TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot4Target" = Target;
+            Hunter's "WHP_Shot4Silver" = Silver;
+            Hunter's "WHP_Shot4Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 5)
+        begin
+            if ($HasAttribute("WHP_Shot5Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot5Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot5Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot5Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot5TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot5Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot5Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot5Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot5Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot5Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot5Potency" = Potency;
+            Hunter's "WHP_Shot5Id" = Shot;
+            Hunter's "WHP_Shot5Epoch" = Epoch;
+            Hunter's "WHP_Shot5Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot5TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot5Target" = Target;
+            Hunter's "WHP_Shot5Silver" = Silver;
+            Hunter's "WHP_Shot5Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 6)
+        begin
+            if ($HasAttribute("WHP_Shot6Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot6Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot6Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot6Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot6TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot6Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot6Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot6Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot6Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot6Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot6Potency" = Potency;
+            Hunter's "WHP_Shot6Id" = Shot;
+            Hunter's "WHP_Shot6Epoch" = Epoch;
+            Hunter's "WHP_Shot6Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot6TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot6Target" = Target;
+            Hunter's "WHP_Shot6Silver" = Silver;
+            Hunter's "WHP_Shot6Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 7)
+        begin
+            if ($HasAttribute("WHP_Shot7Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot7Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot7Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot7Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot7TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot7Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot7Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot7Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot7Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot7Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot7Potency" = Potency;
+            Hunter's "WHP_Shot7Id" = Shot;
+            Hunter's "WHP_Shot7Epoch" = Epoch;
+            Hunter's "WHP_Shot7Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot7TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot7Target" = Target;
+            Hunter's "WHP_Shot7Silver" = Silver;
+            Hunter's "WHP_Shot7Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 8)
+        begin
+            if ($HasAttribute("WHP_Shot8Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot8Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot8Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot8Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot8TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot8Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot8Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot8Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot8Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot8Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot8Potency" = Potency;
+            Hunter's "WHP_Shot8Id" = Shot;
+            Hunter's "WHP_Shot8Epoch" = Epoch;
+            Hunter's "WHP_Shot8Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot8TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot8Target" = Target;
+            Hunter's "WHP_Shot8Silver" = Silver;
+            Hunter's "WHP_Shot8Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 9)
+        begin
+            if ($HasAttribute("WHP_Shot9Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot9Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot9Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot9Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot9TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot9Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot9Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot9Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot9Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot9Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot9Potency" = Potency;
+            Hunter's "WHP_Shot9Id" = Shot;
+            Hunter's "WHP_Shot9Epoch" = Epoch;
+            Hunter's "WHP_Shot9Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot9TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot9Target" = Target;
+            Hunter's "WHP_Shot9Silver" = Silver;
+            Hunter's "WHP_Shot9Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 10)
+        begin
+            if ($HasAttribute("WHP_Shot10Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot10Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot10Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot10Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot10TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot10Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot10Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot10Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot10Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot10Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot10Potency" = Potency;
+            Hunter's "WHP_Shot10Id" = Shot;
+            Hunter's "WHP_Shot10Epoch" = Epoch;
+            Hunter's "WHP_Shot10Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot10TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot10Target" = Target;
+            Hunter's "WHP_Shot10Silver" = Silver;
+            Hunter's "WHP_Shot10Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 11)
+        begin
+            if ($HasAttribute("WHP_Shot11Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot11Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot11Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot11Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot11TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot11Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot11Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot11Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot11Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot11Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot11Potency" = Potency;
+            Hunter's "WHP_Shot11Id" = Shot;
+            Hunter's "WHP_Shot11Epoch" = Epoch;
+            Hunter's "WHP_Shot11Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot11TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot11Target" = Target;
+            Hunter's "WHP_Shot11Silver" = Silver;
+            Hunter's "WHP_Shot11Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 12)
+        begin
+            if ($HasAttribute("WHP_Shot12Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot12Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot12Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot12Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot12TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot12Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot12Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot12Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot12Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot12Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot12Potency" = Potency;
+            Hunter's "WHP_Shot12Id" = Shot;
+            Hunter's "WHP_Shot12Epoch" = Epoch;
+            Hunter's "WHP_Shot12Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot12TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot12Target" = Target;
+            Hunter's "WHP_Shot12Silver" = Silver;
+            Hunter's "WHP_Shot12Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 13)
+        begin
+            if ($HasAttribute("WHP_Shot13Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot13Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot13Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot13Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot13TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot13Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot13Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot13Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot13Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot13Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot13Potency" = Potency;
+            Hunter's "WHP_Shot13Id" = Shot;
+            Hunter's "WHP_Shot13Epoch" = Epoch;
+            Hunter's "WHP_Shot13Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot13TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot13Target" = Target;
+            Hunter's "WHP_Shot13Silver" = Silver;
+            Hunter's "WHP_Shot13Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 14)
+        begin
+            if ($HasAttribute("WHP_Shot14Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot14Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot14Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot14Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot14TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot14Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot14Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot14Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot14Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot14Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot14Potency" = Potency;
+            Hunter's "WHP_Shot14Id" = Shot;
+            Hunter's "WHP_Shot14Epoch" = Epoch;
+            Hunter's "WHP_Shot14Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot14TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot14Target" = Target;
+            Hunter's "WHP_Shot14Silver" = Silver;
+            Hunter's "WHP_Shot14Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 15)
+        begin
+            if ($HasAttribute("WHP_Shot15Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot15Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot15Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot15Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot15TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot15Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot15Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot15Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot15Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot15Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot15Potency" = Potency;
+            Hunter's "WHP_Shot15Id" = Shot;
+            Hunter's "WHP_Shot15Epoch" = Epoch;
+            Hunter's "WHP_Shot15Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot15TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot15Target" = Target;
+            Hunter's "WHP_Shot15Silver" = Silver;
+            Hunter's "WHP_Shot15Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 16)
+        begin
+            if ($HasAttribute("WHP_Shot16Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot16Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot16Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot16Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot16TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot16Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot16Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot16Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot16Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot16Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot16Potency" = Potency;
+            Hunter's "WHP_Shot16Id" = Shot;
+            Hunter's "WHP_Shot16Epoch" = Epoch;
+            Hunter's "WHP_Shot16Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot16TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot16Target" = Target;
+            Hunter's "WHP_Shot16Silver" = Silver;
+            Hunter's "WHP_Shot16Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 17)
+        begin
+            if ($HasAttribute("WHP_Shot17Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot17Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot17Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot17Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot17TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot17Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot17Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot17Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot17Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot17Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot17Potency" = Potency;
+            Hunter's "WHP_Shot17Id" = Shot;
+            Hunter's "WHP_Shot17Epoch" = Epoch;
+            Hunter's "WHP_Shot17Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot17TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot17Target" = Target;
+            Hunter's "WHP_Shot17Silver" = Silver;
+            Hunter's "WHP_Shot17Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 18)
+        begin
+            if ($HasAttribute("WHP_Shot18Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot18Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot18Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot18Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot18TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot18Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot18Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot18Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot18Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot18Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot18Potency" = Potency;
+            Hunter's "WHP_Shot18Id" = Shot;
+            Hunter's "WHP_Shot18Epoch" = Epoch;
+            Hunter's "WHP_Shot18Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot18TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot18Target" = Target;
+            Hunter's "WHP_Shot18Silver" = Silver;
+            Hunter's "WHP_Shot18Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 19)
+        begin
+            if ($HasAttribute("WHP_Shot19Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot19Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot19Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot19Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot19TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot19Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot19Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot19Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot19Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot19Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot19Potency" = Potency;
+            Hunter's "WHP_Shot19Id" = Shot;
+            Hunter's "WHP_Shot19Epoch" = Epoch;
+            Hunter's "WHP_Shot19Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot19TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot19Target" = Target;
+            Hunter's "WHP_Shot19Silver" = Silver;
+            Hunter's "WHP_Shot19Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 20)
+        begin
+            if ($HasAttribute("WHP_Shot20Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot20Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot20Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot20Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot20TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot20Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot20Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot20Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot20Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot20Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot20Potency" = Potency;
+            Hunter's "WHP_Shot20Id" = Shot;
+            Hunter's "WHP_Shot20Epoch" = Epoch;
+            Hunter's "WHP_Shot20Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot20TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot20Target" = Target;
+            Hunter's "WHP_Shot20Silver" = Silver;
+            Hunter's "WHP_Shot20Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 21)
+        begin
+            if ($HasAttribute("WHP_Shot21Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot21Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot21Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot21Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot21TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot21Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot21Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot21Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot21Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot21Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot21Potency" = Potency;
+            Hunter's "WHP_Shot21Id" = Shot;
+            Hunter's "WHP_Shot21Epoch" = Epoch;
+            Hunter's "WHP_Shot21Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot21TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot21Target" = Target;
+            Hunter's "WHP_Shot21Silver" = Silver;
+            Hunter's "WHP_Shot21Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 22)
+        begin
+            if ($HasAttribute("WHP_Shot22Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot22Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot22Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot22Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot22TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot22Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot22Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot22Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot22Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot22Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot22Potency" = Potency;
+            Hunter's "WHP_Shot22Id" = Shot;
+            Hunter's "WHP_Shot22Epoch" = Epoch;
+            Hunter's "WHP_Shot22Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot22TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot22Target" = Target;
+            Hunter's "WHP_Shot22Silver" = Silver;
+            Hunter's "WHP_Shot22Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 23)
+        begin
+            if ($HasAttribute("WHP_Shot23Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot23Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot23Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot23Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot23TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot23Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot23Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot23Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot23Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot23Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot23Potency" = Potency;
+            Hunter's "WHP_Shot23Id" = Shot;
+            Hunter's "WHP_Shot23Epoch" = Epoch;
+            Hunter's "WHP_Shot23Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot23TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot23Target" = Target;
+            Hunter's "WHP_Shot23Silver" = Silver;
+            Hunter's "WHP_Shot23Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 24)
+        begin
+            if ($HasAttribute("WHP_Shot24Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot24Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot24Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot24Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot24TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot24Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot24Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot24Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot24Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot24Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot24Potency" = Potency;
+            Hunter's "WHP_Shot24Id" = Shot;
+            Hunter's "WHP_Shot24Epoch" = Epoch;
+            Hunter's "WHP_Shot24Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot24TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot24Target" = Target;
+            Hunter's "WHP_Shot24Silver" = Silver;
+            Hunter's "WHP_Shot24Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 25)
+        begin
+            if ($HasAttribute("WHP_Shot25Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot25Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot25Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot25Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot25TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot25Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot25Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot25Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot25Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot25Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot25Potency" = Potency;
+            Hunter's "WHP_Shot25Id" = Shot;
+            Hunter's "WHP_Shot25Epoch" = Epoch;
+            Hunter's "WHP_Shot25Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot25TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot25Target" = Target;
+            Hunter's "WHP_Shot25Silver" = Silver;
+            Hunter's "WHP_Shot25Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 26)
+        begin
+            if ($HasAttribute("WHP_Shot26Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot26Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot26Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot26Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot26TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot26Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot26Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot26Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot26Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot26Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot26Potency" = Potency;
+            Hunter's "WHP_Shot26Id" = Shot;
+            Hunter's "WHP_Shot26Epoch" = Epoch;
+            Hunter's "WHP_Shot26Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot26TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot26Target" = Target;
+            Hunter's "WHP_Shot26Silver" = Silver;
+            Hunter's "WHP_Shot26Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 27)
+        begin
+            if ($HasAttribute("WHP_Shot27Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot27Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot27Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot27Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot27TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot27Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot27Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot27Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot27Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot27Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot27Potency" = Potency;
+            Hunter's "WHP_Shot27Id" = Shot;
+            Hunter's "WHP_Shot27Epoch" = Epoch;
+            Hunter's "WHP_Shot27Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot27TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot27Target" = Target;
+            Hunter's "WHP_Shot27Silver" = Silver;
+            Hunter's "WHP_Shot27Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 28)
+        begin
+            if ($HasAttribute("WHP_Shot28Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot28Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot28Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot28Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot28TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot28Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot28Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot28Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot28Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot28Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot28Potency" = Potency;
+            Hunter's "WHP_Shot28Id" = Shot;
+            Hunter's "WHP_Shot28Epoch" = Epoch;
+            Hunter's "WHP_Shot28Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot28TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot28Target" = Target;
+            Hunter's "WHP_Shot28Silver" = Silver;
+            Hunter's "WHP_Shot28Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 29)
+        begin
+            if ($HasAttribute("WHP_Shot29Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot29Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot29Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot29Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot29TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot29Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot29Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot29Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot29Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot29Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot29Potency" = Potency;
+            Hunter's "WHP_Shot29Id" = Shot;
+            Hunter's "WHP_Shot29Epoch" = Epoch;
+            Hunter's "WHP_Shot29Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot29TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot29Target" = Target;
+            Hunter's "WHP_Shot29Silver" = Silver;
+            Hunter's "WHP_Shot29Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 30)
+        begin
+            if ($HasAttribute("WHP_Shot30Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot30Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot30Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot30Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot30TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot30Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot30Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot30Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot30Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot30Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot30Potency" = Potency;
+            Hunter's "WHP_Shot30Id" = Shot;
+            Hunter's "WHP_Shot30Epoch" = Epoch;
+            Hunter's "WHP_Shot30Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot30TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot30Target" = Target;
+            Hunter's "WHP_Shot30Silver" = Silver;
+            Hunter's "WHP_Shot30Life" = Hunter's "WHP_LifeEpoch";
+        end
+    if (Slot == 31)
+        begin
+            if ($HasAttribute("WHP_Shot31Id", Hunter) == FALSE)
+                begin
+                    $AddAttribute(Hunter, "WHP_Shot31Id", "integer", Shot);
+                    $AddAttribute(Hunter, "WHP_Shot31Epoch", "integer", Epoch);
+                    $AddAttribute(Hunter, "WHP_Shot31Player", "integer", $GetUnitPlayerNumber(Hunter));
+                    $AddAttribute(Hunter, "WHP_Shot31TargetPlayer", "integer", $GetUnitPlayerNumber(Target));
+                    $AddAttribute(Hunter, "WHP_Shot31Target", "agentref", Target);
+                    $AddAttribute(Hunter, "WHP_Shot31Silver", "boolean", Silver);
+                    $AddAttribute(Hunter, "WHP_Shot31Life", "integer", Hunter's "WHP_LifeEpoch");
+                end
+            if ($HasAttribute("WHP_Shot31Potency", Hunter) == FALSE)
+                $AddAttribute(Hunter, "WHP_Shot31Potency", "integer", #WHP_BurnBase);
+            Hunter's "WHP_Shot31Potency" = Potency;
+            Hunter's "WHP_Shot31Id" = Shot;
+            Hunter's "WHP_Shot31Epoch" = Epoch;
+            Hunter's "WHP_Shot31Player" = $GetUnitPlayerNumber(Hunter);
+            Hunter's "WHP_Shot31TargetPlayer" = $GetUnitPlayerNumber(Target);
+            Hunter's "WHP_Shot31Target" = Target;
+            Hunter's "WHP_Shot31Silver" = Silver;
+            Hunter's "WHP_Shot31Life" = Hunter's "WHP_LifeEpoch";
+        end
+end
+
+function WHP_TakeHit(agent Hunter, agent Target) is integer
+declare
+    integer Shot, Slot, Code;
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return 0;
+    if ($WHP_Living(Hunter) == FALSE) return 0;
+    if (Hunter's "AttackType" == 1)
+        begin
+            if (Hunter's "Target" != Target) return 0;
+            $WHP_SyncQuarry(Hunter, Target);
+            return 1;
+        end
+    if ($HasAttribute("WHP_Epoch", Hunter) == FALSE) return 0;
+    Shot = 0;
+    $WHP_ImpactId(Shot, Hunter, Target);
+    if (Shot <= 0) return 0;
+    Slot = $WHP_FindShot(Hunter, Shot);
+    if (Slot < 0) return 0;
+    if (Slot == 0)
+        if ($HasAttribute("WHP_Shot0Id", Hunter))
+            if ((Hunter's "WHP_Shot0Id" == Shot) && (Hunter's "WHP_Shot0Target" == Target))
+                begin
+                    Hunter's "WHP_Shot0Id" = 0;
+                    if (Hunter's "WHP_Shot0Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot0Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot0TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot0Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot0Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot0Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot0Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot0Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 1)
+        if ($HasAttribute("WHP_Shot1Id", Hunter))
+            if ((Hunter's "WHP_Shot1Id" == Shot) && (Hunter's "WHP_Shot1Target" == Target))
+                begin
+                    Hunter's "WHP_Shot1Id" = 0;
+                    if (Hunter's "WHP_Shot1Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot1Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot1TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot1Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot1Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot1Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot1Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot1Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 2)
+        if ($HasAttribute("WHP_Shot2Id", Hunter))
+            if ((Hunter's "WHP_Shot2Id" == Shot) && (Hunter's "WHP_Shot2Target" == Target))
+                begin
+                    Hunter's "WHP_Shot2Id" = 0;
+                    if (Hunter's "WHP_Shot2Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot2Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot2TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot2Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot2Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot2Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot2Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot2Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 3)
+        if ($HasAttribute("WHP_Shot3Id", Hunter))
+            if ((Hunter's "WHP_Shot3Id" == Shot) && (Hunter's "WHP_Shot3Target" == Target))
+                begin
+                    Hunter's "WHP_Shot3Id" = 0;
+                    if (Hunter's "WHP_Shot3Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot3Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot3TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot3Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot3Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot3Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot3Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot3Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 4)
+        if ($HasAttribute("WHP_Shot4Id", Hunter))
+            if ((Hunter's "WHP_Shot4Id" == Shot) && (Hunter's "WHP_Shot4Target" == Target))
+                begin
+                    Hunter's "WHP_Shot4Id" = 0;
+                    if (Hunter's "WHP_Shot4Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot4Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot4TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot4Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot4Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot4Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot4Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot4Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 5)
+        if ($HasAttribute("WHP_Shot5Id", Hunter))
+            if ((Hunter's "WHP_Shot5Id" == Shot) && (Hunter's "WHP_Shot5Target" == Target))
+                begin
+                    Hunter's "WHP_Shot5Id" = 0;
+                    if (Hunter's "WHP_Shot5Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot5Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot5TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot5Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot5Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot5Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot5Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot5Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 6)
+        if ($HasAttribute("WHP_Shot6Id", Hunter))
+            if ((Hunter's "WHP_Shot6Id" == Shot) && (Hunter's "WHP_Shot6Target" == Target))
+                begin
+                    Hunter's "WHP_Shot6Id" = 0;
+                    if (Hunter's "WHP_Shot6Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot6Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot6TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot6Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot6Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot6Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot6Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot6Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 7)
+        if ($HasAttribute("WHP_Shot7Id", Hunter))
+            if ((Hunter's "WHP_Shot7Id" == Shot) && (Hunter's "WHP_Shot7Target" == Target))
+                begin
+                    Hunter's "WHP_Shot7Id" = 0;
+                    if (Hunter's "WHP_Shot7Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot7Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot7TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot7Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot7Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot7Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot7Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot7Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 8)
+        if ($HasAttribute("WHP_Shot8Id", Hunter))
+            if ((Hunter's "WHP_Shot8Id" == Shot) && (Hunter's "WHP_Shot8Target" == Target))
+                begin
+                    Hunter's "WHP_Shot8Id" = 0;
+                    if (Hunter's "WHP_Shot8Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot8Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot8TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot8Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot8Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot8Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot8Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot8Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 9)
+        if ($HasAttribute("WHP_Shot9Id", Hunter))
+            if ((Hunter's "WHP_Shot9Id" == Shot) && (Hunter's "WHP_Shot9Target" == Target))
+                begin
+                    Hunter's "WHP_Shot9Id" = 0;
+                    if (Hunter's "WHP_Shot9Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot9Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot9TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot9Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot9Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot9Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot9Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot9Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 10)
+        if ($HasAttribute("WHP_Shot10Id", Hunter))
+            if ((Hunter's "WHP_Shot10Id" == Shot) && (Hunter's "WHP_Shot10Target" == Target))
+                begin
+                    Hunter's "WHP_Shot10Id" = 0;
+                    if (Hunter's "WHP_Shot10Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot10Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot10TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot10Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot10Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot10Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot10Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot10Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 11)
+        if ($HasAttribute("WHP_Shot11Id", Hunter))
+            if ((Hunter's "WHP_Shot11Id" == Shot) && (Hunter's "WHP_Shot11Target" == Target))
+                begin
+                    Hunter's "WHP_Shot11Id" = 0;
+                    if (Hunter's "WHP_Shot11Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot11Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot11TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot11Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot11Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot11Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot11Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot11Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 12)
+        if ($HasAttribute("WHP_Shot12Id", Hunter))
+            if ((Hunter's "WHP_Shot12Id" == Shot) && (Hunter's "WHP_Shot12Target" == Target))
+                begin
+                    Hunter's "WHP_Shot12Id" = 0;
+                    if (Hunter's "WHP_Shot12Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot12Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot12TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot12Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot12Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot12Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot12Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot12Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 13)
+        if ($HasAttribute("WHP_Shot13Id", Hunter))
+            if ((Hunter's "WHP_Shot13Id" == Shot) && (Hunter's "WHP_Shot13Target" == Target))
+                begin
+                    Hunter's "WHP_Shot13Id" = 0;
+                    if (Hunter's "WHP_Shot13Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot13Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot13TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot13Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot13Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot13Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot13Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot13Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 14)
+        if ($HasAttribute("WHP_Shot14Id", Hunter))
+            if ((Hunter's "WHP_Shot14Id" == Shot) && (Hunter's "WHP_Shot14Target" == Target))
+                begin
+                    Hunter's "WHP_Shot14Id" = 0;
+                    if (Hunter's "WHP_Shot14Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot14Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot14TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot14Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot14Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot14Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot14Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot14Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 15)
+        if ($HasAttribute("WHP_Shot15Id", Hunter))
+            if ((Hunter's "WHP_Shot15Id" == Shot) && (Hunter's "WHP_Shot15Target" == Target))
+                begin
+                    Hunter's "WHP_Shot15Id" = 0;
+                    if (Hunter's "WHP_Shot15Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot15Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot15TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot15Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot15Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot15Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot15Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot15Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 16)
+        if ($HasAttribute("WHP_Shot16Id", Hunter))
+            if ((Hunter's "WHP_Shot16Id" == Shot) && (Hunter's "WHP_Shot16Target" == Target))
+                begin
+                    Hunter's "WHP_Shot16Id" = 0;
+                    if (Hunter's "WHP_Shot16Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot16Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot16TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot16Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot16Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot16Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot16Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot16Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 17)
+        if ($HasAttribute("WHP_Shot17Id", Hunter))
+            if ((Hunter's "WHP_Shot17Id" == Shot) && (Hunter's "WHP_Shot17Target" == Target))
+                begin
+                    Hunter's "WHP_Shot17Id" = 0;
+                    if (Hunter's "WHP_Shot17Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot17Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot17TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot17Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot17Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot17Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot17Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot17Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 18)
+        if ($HasAttribute("WHP_Shot18Id", Hunter))
+            if ((Hunter's "WHP_Shot18Id" == Shot) && (Hunter's "WHP_Shot18Target" == Target))
+                begin
+                    Hunter's "WHP_Shot18Id" = 0;
+                    if (Hunter's "WHP_Shot18Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot18Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot18TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot18Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot18Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot18Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot18Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot18Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 19)
+        if ($HasAttribute("WHP_Shot19Id", Hunter))
+            if ((Hunter's "WHP_Shot19Id" == Shot) && (Hunter's "WHP_Shot19Target" == Target))
+                begin
+                    Hunter's "WHP_Shot19Id" = 0;
+                    if (Hunter's "WHP_Shot19Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot19Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot19TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot19Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot19Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot19Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot19Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot19Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 20)
+        if ($HasAttribute("WHP_Shot20Id", Hunter))
+            if ((Hunter's "WHP_Shot20Id" == Shot) && (Hunter's "WHP_Shot20Target" == Target))
+                begin
+                    Hunter's "WHP_Shot20Id" = 0;
+                    if (Hunter's "WHP_Shot20Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot20Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot20TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot20Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot20Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot20Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot20Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot20Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 21)
+        if ($HasAttribute("WHP_Shot21Id", Hunter))
+            if ((Hunter's "WHP_Shot21Id" == Shot) && (Hunter's "WHP_Shot21Target" == Target))
+                begin
+                    Hunter's "WHP_Shot21Id" = 0;
+                    if (Hunter's "WHP_Shot21Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot21Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot21TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot21Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot21Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot21Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot21Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot21Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 22)
+        if ($HasAttribute("WHP_Shot22Id", Hunter))
+            if ((Hunter's "WHP_Shot22Id" == Shot) && (Hunter's "WHP_Shot22Target" == Target))
+                begin
+                    Hunter's "WHP_Shot22Id" = 0;
+                    if (Hunter's "WHP_Shot22Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot22Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot22TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot22Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot22Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot22Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot22Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot22Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 23)
+        if ($HasAttribute("WHP_Shot23Id", Hunter))
+            if ((Hunter's "WHP_Shot23Id" == Shot) && (Hunter's "WHP_Shot23Target" == Target))
+                begin
+                    Hunter's "WHP_Shot23Id" = 0;
+                    if (Hunter's "WHP_Shot23Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot23Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot23TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot23Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot23Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot23Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot23Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot23Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 24)
+        if ($HasAttribute("WHP_Shot24Id", Hunter))
+            if ((Hunter's "WHP_Shot24Id" == Shot) && (Hunter's "WHP_Shot24Target" == Target))
+                begin
+                    Hunter's "WHP_Shot24Id" = 0;
+                    if (Hunter's "WHP_Shot24Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot24Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot24TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot24Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot24Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot24Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot24Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot24Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 25)
+        if ($HasAttribute("WHP_Shot25Id", Hunter))
+            if ((Hunter's "WHP_Shot25Id" == Shot) && (Hunter's "WHP_Shot25Target" == Target))
+                begin
+                    Hunter's "WHP_Shot25Id" = 0;
+                    if (Hunter's "WHP_Shot25Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot25Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot25TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot25Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot25Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot25Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot25Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot25Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 26)
+        if ($HasAttribute("WHP_Shot26Id", Hunter))
+            if ((Hunter's "WHP_Shot26Id" == Shot) && (Hunter's "WHP_Shot26Target" == Target))
+                begin
+                    Hunter's "WHP_Shot26Id" = 0;
+                    if (Hunter's "WHP_Shot26Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot26Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot26TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot26Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot26Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot26Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot26Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot26Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 27)
+        if ($HasAttribute("WHP_Shot27Id", Hunter))
+            if ((Hunter's "WHP_Shot27Id" == Shot) && (Hunter's "WHP_Shot27Target" == Target))
+                begin
+                    Hunter's "WHP_Shot27Id" = 0;
+                    if (Hunter's "WHP_Shot27Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot27Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot27TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot27Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot27Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot27Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot27Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot27Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 28)
+        if ($HasAttribute("WHP_Shot28Id", Hunter))
+            if ((Hunter's "WHP_Shot28Id" == Shot) && (Hunter's "WHP_Shot28Target" == Target))
+                begin
+                    Hunter's "WHP_Shot28Id" = 0;
+                    if (Hunter's "WHP_Shot28Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot28Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot28TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot28Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot28Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot28Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot28Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot28Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 29)
+        if ($HasAttribute("WHP_Shot29Id", Hunter))
+            if ((Hunter's "WHP_Shot29Id" == Shot) && (Hunter's "WHP_Shot29Target" == Target))
+                begin
+                    Hunter's "WHP_Shot29Id" = 0;
+                    if (Hunter's "WHP_Shot29Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot29Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot29TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot29Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot29Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot29Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot29Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot29Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 30)
+        if ($HasAttribute("WHP_Shot30Id", Hunter))
+            if ((Hunter's "WHP_Shot30Id" == Shot) && (Hunter's "WHP_Shot30Target" == Target))
+                begin
+                    Hunter's "WHP_Shot30Id" = 0;
+                    if (Hunter's "WHP_Shot30Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot30Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot30TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot30Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot30Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot30Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot30Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot30Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    if (Slot == 31)
+        if ($HasAttribute("WHP_Shot31Id", Hunter))
+            if ((Hunter's "WHP_Shot31Id" == Shot) && (Hunter's "WHP_Shot31Target" == Target))
+                begin
+                    Hunter's "WHP_Shot31Id" = 0;
+                    if (Hunter's "WHP_Shot31Life" != Hunter's "WHP_LifeEpoch") return 0;
+                    if (Hunter's "WHP_Shot31Player" != $GetUnitPlayerNumber(Hunter)) return 0;
+                    if (Hunter's "WHP_Shot31TargetPlayer" != $GetUnitPlayerNumber(Target)) return 0;
+                    Code = 0;
+                    if (Hunter's "WHP_Shot31Silver") Code = 2;
+                    if (Code == 2)
+                        if ($HasAttribute("WHP_Shot31Potency", Hunter))
+                            begin
+                                if (Hunter's "WHP_Shot31Potency" == #WHP_BurnUndead) Code += 8;
+                                else if (Hunter's "WHP_Shot31Potency" == #WHP_BurnRefined) Code += 4;
+                            end
+                    if ((Hunter's "WHP_Shot31Epoch" == Hunter's "WHP_Epoch") &&
+                        (Hunter's "WHP_Quarry" == Target) && (Hunter's "Target" == Target)) Code += 1;
+                    return Code;
+                end
+    return 0;
+end
+
+function WHP_HitEffects(agent Hunter, agent Target, integer Code)
+declare
+    integer Potency;
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    if ($WHP_Living(Target) == FALSE) return;
+    Potency = #WHP_BurnBase;
+    if (Code >= 8)
+        begin
+            Potency = #WHP_BurnUndead;
+            Code -= 8;
+        end
+    else if (Code >= 4)
+        begin
+            Potency = #WHP_BurnRefined;
+            Code -= 4;
+        end
+    if ((Code == 1) || (Code == 3))
+        if ((Hunter's "Target" == Target) && (Hunter's "WHP_Quarry" == Target))
+            begin
+                $WHP_MarkHit(Hunter, Target);
+                $WHP_SunderHit(Hunter, Target);
+                $WHP_EmbersteelHit(Hunter, Target);
+            end
+    if (Code >= 2) $WHP_SilverPayloadHit(Hunter, Target, Potency);
+end
+
+function WHP_HunterDeath(agent Hunter)
+declare
+begin
+    if ($WHP_IsHunter(Hunter) == FALSE) return;
+    if ($CheckEffector(Hunter, "WHP_Ward")) $DeleteEffector(Hunter, "WHP_Ward");
+    if ($HasAttribute("WHP_LifeEpoch", Hunter) == FALSE)
+        $AddAttribute(Hunter, "WHP_LifeEpoch", "integer", 0);
+    Hunter's "WHP_LifeEpoch" += 1;
+    $WHP_ClearHunter(Hunter);
+    if ($HasAttribute("WHP_Shot0Id", Hunter)) Hunter's "WHP_Shot0Id" = 0;
+    if ($HasAttribute("WHP_Shot1Id", Hunter)) Hunter's "WHP_Shot1Id" = 0;
+    if ($HasAttribute("WHP_Shot2Id", Hunter)) Hunter's "WHP_Shot2Id" = 0;
+    if ($HasAttribute("WHP_Shot3Id", Hunter)) Hunter's "WHP_Shot3Id" = 0;
+    if ($HasAttribute("WHP_Shot4Id", Hunter)) Hunter's "WHP_Shot4Id" = 0;
+    if ($HasAttribute("WHP_Shot5Id", Hunter)) Hunter's "WHP_Shot5Id" = 0;
+    if ($HasAttribute("WHP_Shot6Id", Hunter)) Hunter's "WHP_Shot6Id" = 0;
+    if ($HasAttribute("WHP_Shot7Id", Hunter)) Hunter's "WHP_Shot7Id" = 0;
+    if ($HasAttribute("WHP_Shot8Id", Hunter)) Hunter's "WHP_Shot8Id" = 0;
+    if ($HasAttribute("WHP_Shot9Id", Hunter)) Hunter's "WHP_Shot9Id" = 0;
+    if ($HasAttribute("WHP_Shot10Id", Hunter)) Hunter's "WHP_Shot10Id" = 0;
+    if ($HasAttribute("WHP_Shot11Id", Hunter)) Hunter's "WHP_Shot11Id" = 0;
+    if ($HasAttribute("WHP_Shot12Id", Hunter)) Hunter's "WHP_Shot12Id" = 0;
+    if ($HasAttribute("WHP_Shot13Id", Hunter)) Hunter's "WHP_Shot13Id" = 0;
+    if ($HasAttribute("WHP_Shot14Id", Hunter)) Hunter's "WHP_Shot14Id" = 0;
+    if ($HasAttribute("WHP_Shot15Id", Hunter)) Hunter's "WHP_Shot15Id" = 0;
+    if ($HasAttribute("WHP_Shot16Id", Hunter)) Hunter's "WHP_Shot16Id" = 0;
+    if ($HasAttribute("WHP_Shot17Id", Hunter)) Hunter's "WHP_Shot17Id" = 0;
+    if ($HasAttribute("WHP_Shot18Id", Hunter)) Hunter's "WHP_Shot18Id" = 0;
+    if ($HasAttribute("WHP_Shot19Id", Hunter)) Hunter's "WHP_Shot19Id" = 0;
+    if ($HasAttribute("WHP_Shot20Id", Hunter)) Hunter's "WHP_Shot20Id" = 0;
+    if ($HasAttribute("WHP_Shot21Id", Hunter)) Hunter's "WHP_Shot21Id" = 0;
+    if ($HasAttribute("WHP_Shot22Id", Hunter)) Hunter's "WHP_Shot22Id" = 0;
+    if ($HasAttribute("WHP_Shot23Id", Hunter)) Hunter's "WHP_Shot23Id" = 0;
+    if ($HasAttribute("WHP_Shot24Id", Hunter)) Hunter's "WHP_Shot24Id" = 0;
+    if ($HasAttribute("WHP_Shot25Id", Hunter)) Hunter's "WHP_Shot25Id" = 0;
+    if ($HasAttribute("WHP_Shot26Id", Hunter)) Hunter's "WHP_Shot26Id" = 0;
+    if ($HasAttribute("WHP_Shot27Id", Hunter)) Hunter's "WHP_Shot27Id" = 0;
+    if ($HasAttribute("WHP_Shot28Id", Hunter)) Hunter's "WHP_Shot28Id" = 0;
+    if ($HasAttribute("WHP_Shot29Id", Hunter)) Hunter's "WHP_Shot29Id" = 0;
+    if ($HasAttribute("WHP_Shot30Id", Hunter)) Hunter's "WHP_Shot30Id" = 0;
+    if ($HasAttribute("WHP_Shot31Id", Hunter)) Hunter's "WHP_Shot31Id" = 0;
+end

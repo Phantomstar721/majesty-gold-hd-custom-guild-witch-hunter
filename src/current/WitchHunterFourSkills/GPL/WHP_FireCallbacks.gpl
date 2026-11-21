@@ -1,0 +1,281 @@
+// Stock callbacks: only confirmed-hit payload and native owning-effect cure added.
+
+function WHP_FireAttack(agent thisagent, agent target,integer damage) is boolean
+
+declare
+	integer exp_given,hitresult,Before;
+    boolean Applied;
+
+begin
+	if ($notvalid(target))
+		return FALSE;
+
+	if ($notvalid_attacker(thisagent))
+		return FALSE;
+
+	$react(thisagent,target);
+
+	exp_given = $exp_value(thisagent,target);
+
+	hitresult = $spellhit(target);
+
+	if (hitresult == 1) // hit
+		begin
+			Before = $GetAttribute(target, #ATTRIB_HP);
+            $WHP_DirectSpellDamage(thisagent,target,damage,1);
+            if ($IsValidGamePiece(target)) Applied = $GetAttribute(target, #ATTRIB_HP) < Before;
+		end
+	else
+		if (hitresult == 2) // resisted
+			begin
+			end
+
+	$attack_end(thisagent,exp_given);
+    return Applied;
+end
+
+
+///////////////////////////////////////////////////////////////////////////////
+// This is a player cast spell attacking, not from
+// an agent, but from a mouse-click
+
+function Fire_Hammer_Hit ( agent thisagent, agent target )
+// This is the hit callback for the fire hammer spell used by solarii.
+
+declare
+    boolean Applied;
+    list WHP_HitTargets;
+
+begin
+	if ( $isdead ( target ))
+		return;
+
+	// Hit the target.
+	$CreateEffector ( target, "Fire_Hammer_Effector", 0 );
+
+	If ($Does_Resist_Fire (Target) == False)
+		begin
+
+			Applied = $WHP_FireAttack ( thisagent, target, 20 + ( $getattribute ( thisagent, #ATTRIB_experienceLevel ) * 2 ));
+                    if (Applied)
+                        begin
+                            $WHP_SunhammerCharge(thisagent);
+                            $WHP_FireRefresh(thisagent, target);
+                            WHP_HitTargets << target;
+                        end
+
+		end
+
+	// Return the missile to me.
+	if ( $IsDead ( thisagent ) == FALSE )
+		if ( $IsDead ( target ) == FALSE )
+			$CreateMissile ( "Fire_Hammer_False_Projectile", target, Thisagent );
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+function Solarus_Sun_Scorch_Hit( agent thisagent, agent target )
+declare
+    boolean Applied;
+    list WHP_HitTargets;
+
+	list targets;
+	agent dude;
+
+begin
+	$createeffector( thisagent, "sun_scorch_effector1", 0 );
+
+//	$ListObjects(thisagent,"monster",65, targets );
+	targets = $compile_enemies(thisagent,65);
+
+	foreach dude in targets do
+		begin
+			If ($Does_Resist_Fire (Dude) == False)
+				begin
+
+					$createeffector( dude, "sun_scorch_effector2", 0 );
+					Applied = $WHP_FireAttack( thisagent, dude, 15 + $getattribute(thisagent,#ATTRIB_experienceLevel));
+                    if (Applied)
+                        begin
+                            $WHP_SunhammerCharge(thisagent);
+                            $WHP_FireRefresh(thisagent, dude);
+                            WHP_HitTargets << dude;
+                        end
+
+				end
+		end
+    $WHP_ScorchSpread(thisagent, WHP_HitTargets);
+end
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+function Supernova_Blast ( agent thisagent, agent target )
+// This spell is called directly when high level Solarii die. The standard 'target'
+// that the blast is centered on is themselves.
+
+declare
+    boolean Applied;
+    list WHP_HitTargets;
+
+	list targets;
+	agent unit;
+
+begin
+	$createeffector ( target, "Supernova_Blast_Effector", 0 );
+
+	targets = $compile_enemies ( target, #Supernova_Radius );
+
+	foreach unit in targets do
+		begin
+				If ($Does_Resist_Fire (Unit) == False)
+					begin
+
+						$createeffector ( unit, "Supernova_Hit_Effector", 0 );
+						Applied = $WHP_FireAttack ( thisagent, unit, #Supernova_Damage + ( $getattribute ( thisagent, #ATTRIB_experienceLevel ) * 2 ));
+                    if (Applied)
+                        begin
+                            $WHP_SunhammerCharge(thisagent);
+                            $WHP_FireRefresh(thisagent, unit);
+                            WHP_HitTargets << unit;
+                        end
+
+					end
+		end
+end
+
+// --- Howl of Discord Functions begin here --- //
+
+///////////////////////////////////////////////////////////////////////////////
+
+function Ratman_Plague_Active ( agent thisagent )
+declare
+	integer plague_generation, HP;
+	list plague_targets;
+	agent target;
+	boolean valid;
+
+begin
+    if ($WHP_UseSalts(thisagent)) return;
+
+	If ( $IsDead ( thisagent ))
+		return;
+
+	// Get my plague generation and iterate it down by one.
+	plague_generation = $GetAttribute ( thisagent, #ATTRIB_HasEffectRatmanPlague );
+	plague_generation -= 1;
+
+	// If the plague generation has run out, end the plague here.
+	if ( plague_generation < 1 )
+		begin
+			$DeleteEffector ( thisagent, "Ratman_Plague_Icon" );
+			return;
+		end
+
+	// Iterate the plague to all heroes nearby.
+	$ListObjects ( thisagent, "hero", #Plague_Radius, plague_targets, #NoHiddenMap );
+	foreach target in plague_targets do
+		begin
+			valid = TRUE;
+			If ( $IsDead ( target ))
+				valid = FALSE;
+			if ($WHP_PlagueProtected(target))
+				valid = FALSE;
+			if ( $GetAttribute ( target, #ATTRIB_HasEffectRatmanPlague ) > 0 )
+				valid = FALSE;
+
+			if ( valid )
+				if ( Target's "subtype" != "undead" )
+					// You get a vitality check to see if you resist the plague. It's difficult though.
+	 				if (( $RandomNumber ( 40 ) + 5 ) > $GetAttribute ( target, #ATTRIB_Vitality ))
+						begin
+							$Ratman_Plague_Begin ( thisagent, target );
+							$SetAttribute ( target, #ATTRIB_HasEffectRatmanPlague, #Ratman_Plague_Generations );
+						end
+		end
+
+	// Damage the hero a little bit from the plague.
+	HP = $GetAttribute ( thisagent, #ATTRIB_HP );
+	HP -= ( $RandomNumber ( 6 ) + 1 );
+	if ( HP < 1 )
+		HP = 1; // Note - You can't actually die from the rat plague directly.
+
+	$SetAttribute ( thisagent, #ATTRIB_HP, HP );
+
+	// Vitality check is made. If successful the duration of the plague is shortened.
+	if (( $RandomNumber ( 40 ) + 5 ) > $GetAttribute ( thisagent, #ATTRIB_Vitality ))
+		plague_generation -= 1;
+
+	// Dont set the plague attribute below 1 yet, or the character could be re-infected unfairly.
+	if ( plague_generation < 1 )
+		plague_generation = 1;
+
+	// Set the new generation value on the infected agent.
+	$SetAttribute ( thisagent, #ATTRIB_HasEffectRatmanPlague, plague_generation );
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+function Infectious_Cloud_Hit ( agent thisagent, agent target )
+// monster spell
+// - callback from missile hit
+declare
+
+begin
+	$createeffector ( target, "Infectious_Cloud_Effector", 0 );
+	$spell_attack ( thisagent, target, 10 );
+
+	if ( $isdead ( target ) == FALSE )
+		if ($WHP_PlagueProtected(target) == FALSE)
+		    if ( $GetAttribute ( target, #ATTRIB_HasEffectRatmanPlague ) < 1 )
+			if (( $RandomNumber ( 100 ) + 1 ) < #Plague_Chance )
+				if ( Target's "Type" != "Building" && Target's "Type" != "Lair" )
+					if ( Target's "subtype" != "undead" )
+						begin
+							$SetAttribute ( target, #ATTRIB_HasEffectRatmanPlague, #Ratman_Plague_Generations );
+							$Ratman_Plague_Begin ( thisagent, target );
+						end
+end
+
+// --- Ratman Plague Spell --- //
+///////////////////////////////////////////////////////////////////////////////
+
+function Plague_Event ( agent palace )
+// RANDOM_EVENT
+// Makes a few of your heroes (closest to the palace) carriers of the ratman plague. Haha.
+declare
+	agent hero;
+	list palaces, heroes;
+	integer count, victims;
+
+begin
+	count = 1;
+	victims = 5;
+	$listobjects ( palace, "hero", 500, heroes, #NoHiddenMap, #InsideOtherUnits );
+
+	if ( $ListSize ( heroes ) > 0 )
+		victims = $ListSize ( heroes );
+
+	while ( count < victims ) do
+		begin
+			hero = $Listmember ( heroes, count );
+			if ($WHP_PlagueProtected(hero) == FALSE)
+			    if ( $GetAttribute ( hero, #ATTRIB_HasEffectRatmanPlague ) < 1 )
+				if ( hero's "subtype" != "undead" )
+					begin
+
+						$SetAttribute ( hero, #ATTRIB_HasEffectRatmanPlague, #Ratman_Plague_Generations );
+						$Ratman_Plague_Begin ( hero, hero );
+
+					end
+
+			count += 1;
+
+		end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+

@@ -1,0 +1,37 @@
+// Published output-reference-first stock.checked-placement.v1 adapter.
+function WHP_DawnfallProviderReady(agent Caster) is integer
+declare
+    integer Result;
+begin
+    Result = -1;
+    $WHP_Dawnfall_Ready(Result, Caster);
+    return Result;
+end
+
+function WHP_DawnfallProviderBoundary(agent Caster, agent Target, integer Phase) is boolean
+declare
+    integer Result;
+begin
+    Result = -1;
+    $WHP_Dawnfall_Boundary(Result, Caster, Target, Phase);
+    return Result == 1;
+end
+
+function WHP_DawnfallProviderBegin(agent Caster, agent Target) is boolean
+declare
+    integer Result;
+begin
+    Result = -1;
+    $WHP_Dawnfall_Begin(Result, Caster, Target);
+    return Result == 1;
+end
+
+function WHP_DawnfallProviderCommit(agent Caster, agent Target) is integer
+declare
+    integer Result;
+begin
+    Result = -1;
+    $WHP_Dawnfall_Commit(Result, Caster, Target);
+    return Result;
+end
+

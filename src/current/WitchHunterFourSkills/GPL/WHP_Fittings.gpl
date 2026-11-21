@@ -1,0 +1,60 @@
+// Fixed equipment bonuses follow stock permanent stat adjustments.
+// Fitting flags and native attributes save normally; there is no load replay.
+function WHP_CrossbowRange(agent Hunter) is integer
+declare
+begin
+    if ($WHP_HasFitting(Hunter, "WHP_Windlass")) return 170;
+    return 130;
+end
+
+function WHP_ApplyNightglass(agent Hunter)
+declare
+begin
+    if ($WHP_HasFitting(Hunter, "WHP_Nightglass")) return;
+    if ($HasAttribute("WHP_Nightglass", Hunter) == FALSE)
+        $AddAttribute(Hunter, "WHP_Nightglass", "integer", 0);
+    Hunter's "WHP_Nightglass" = 1;
+    $AdjustAttribute(Hunter, #ATTRIB_SightRange, 40);
+end
+
+function WHP_ApplyWindlass(agent Hunter)
+declare
+begin
+    if ($WHP_HasFitting(Hunter, "WHP_Windlass")) return;
+    if ($HasAttribute("WHP_Windlass", Hunter) == FALSE)
+        $AddAttribute(Hunter, "WHP_Windlass", "integer", 0);
+    Hunter's "WHP_Windlass" = 1;
+    if (Hunter's "AttackType" == 2)
+        $AdjustAttribute(Hunter, #ATTRIB_MaxAttackRange, 40);
+end
+
+function WHP_ApplyGravebind(agent Hunter)
+declare
+begin
+    if ($HasAttribute("WHP_Gravebind", Hunter) == FALSE)
+        $AddAttribute(Hunter, "WHP_Gravebind", "integer", 0);
+    Hunter's "WHP_Gravebind" = 1;
+end
+
+function WHP_ClearMarkSlow(agent Target)
+declare
+begin
+    if ($IsValidGamePiece(Target) == FALSE) return;
+    if ($CheckEffector(Target, "WHP_GravebindSlow"))
+        $DeleteEffector(Target, "WHP_GravebindSlow");
+end
+
+// Removal-only reconciliation at existing Mark callbacks/queries. Reading Mark
+// must never renew a slow; only an equipped Hunter's successful hit may do so.
+function WHP_SyncMarkSlow(agent Target)
+declare
+    agent Hunter;
+    boolean Found;
+begin
+    if ($IsValidGamePiece(Target) == FALSE) return;
+    if ($HasAttribute("WHP_MarkOwners", Target))
+        foreach Hunter in Target's "WHP_MarkOwners" do
+            if ($WHP_OwnsMark(Hunter, Target))
+                if ($WHP_HasFitting(Hunter, "WHP_Gravebind")) Found = TRUE;
+    if (Found == FALSE) $WHP_ClearMarkSlow(Target);
+end

@@ -1,0 +1,168 @@
+<Majesty>
+  <Description type="Unit" subType="Building" ID="WCH1" Name="WHP_Chapterhouse1" Description="Witch Hunters Chapterhouse">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <Info value="BlockFlying" />
+      <Info value="ModifyTerrainTextureOnPlacement" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="1" />
+      <ImageIDBase value="WPG1" />
+      <DefaultSound value="WHP_ChapterS1" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="WCPN" />
+      <Cost value="800" />
+      <Multiplier value="2.0" />
+      <IncomeType value="2" />
+      <IncomeAmount value="40" />
+      <MaxHP value="350" />
+      <MaxGuildMembers value="4" />
+      <SightRange value="175" />
+      <Flags value="IsGuild" />
+      <Flags value="HasHPBar" />
+      <Flags value="HasGoldToolTip" />
+      <HelpID value="hWH1" />
+      <Produces>
+        <Unit ID="Witch_Hunter_Prototype" />
+      </Produces>
+      <UpgradeTo value="WHP_Chapterhouse2" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Building" ID="WSW1" Name="WHP_SilverWorkshop1" Description="Argent Crucible">
+    <Engine version="1">
+      <Info value="Directionless" />
+      <Info value="BlockGround" />
+      <Info value="BlockFlying" />
+      <Info value="ModifyTerrainTextureOnPlacement" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="2" />
+      <ImageIDBase value="WSG1" />
+      <DefaultSound value="WHP_CrucS1" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="WSPN" />
+      <Cost value="500" />
+      <Multiplier value="1.0" />
+      <IncomeType value="2" />
+      <IncomeAmount value="40" />
+      <MaxHP value="250" />
+      <SightRange value="100" />
+      <Flags value="HasHPBar" />
+      <Flags value="HasGoldToolTip" />
+      <HelpID value="hWH4" />
+      <UpgradeTo value="WHP_SilverWorkshop2" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Building" ID="WCH2" Name="WHP_Chapterhouse2" Description="Chapterhouse Level 2">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <Info value="BlockFlying" />
+      <Info value="ModifyTerrainTextureOnPlacement" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="1" />
+      <ImageIDBase value="WPG2" />
+      <DefaultSound value="WHP_ChapterS1" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="WCPN" />
+      <Cost value="1500" />
+      <Multiplier value="2.0" />
+      <IncomeType value="2" />
+      <IncomeAmount value="40" />
+      <MaxHP value="500" />
+      <MaxGuildMembers value="4" />
+      <SightRange value="175" />
+      <Flags value="IsGuild" />
+      <Flags value="HasHPBar" />
+      <Flags value="HasGoldToolTip" />
+      <HelpID value="hWH2" />
+      <Produces>
+        <Unit ID="Witch_Hunter_Prototype" />
+      </Produces>
+      <UpgradeTo value="WHP_Chapterhouse3" />
+      <UpgradeFrom value="WHP_Chapterhouse1" />
+      <Flags value="NotBuildable" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Building" ID="WSW2" Name="WHP_SilverWorkshop2" Description="Argent Crucible">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <Info value="BlockFlying" />
+      <Info value="ModifyTerrainTextureOnPlacement" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="2" />
+      <ImageIDBase value="WSG2" />
+      <DefaultSound value="WHP_CrucS1" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="WSPN" />
+      <Cost value="600" />
+      <Multiplier value="1.0" />
+      <IncomeType value="2" />
+      <IncomeAmount value="40" />
+      <MaxHP value="300" />
+      <SightRange value="100" />
+      <Flags value="NotBuildable" />
+      <Flags value="HasHPBar" />
+      <Flags value="HasGoldToolTip" />
+      <HelpID value="hWH5" />
+      <UpgradeTo value="WHP_SilverWorkshop3" />
+      <UpgradeFrom value="WHP_SilverWorkshop1" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Building" ID="WCH3" Name="WHP_Chapterhouse3" Description="Chapterhouse Level 3">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <Info value="BlockFlying" />
+      <Info value="ModifyTerrainTextureOnPlacement" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="1" />
+      <ImageIDBase value="WPG3" />
+      <DefaultSound value="WHP_ChapterS1" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="WCPN" />
+      <Cost value="2500" />
+      <Multiplier value="2.0" />
+      <IncomeType value="2" />
+      <IncomeAmount value="40" />
+      <MaxHP value="700" />
+      <MaxGuildMembers value="4" />
+      <SightRange value="175" />
+      <Flags value="IsGuild" />
+      <Flags value="HasHPBar" />
+      <Flags value="HasGoldToolTip" />
+      <HelpID value="hWH3" />
+      <Produces>
+        <Unit ID="Witch_Hunter_Prototype" />
+      </Produces>
+      <UpgradeFrom value="WHP_Chapterhouse2" />
+      <Flags value="NotBuildable" />
+    </Game>
+  </Description>
+  <Description type="Unit" subType="Building" ID="WSW3" Name="WHP_SilverWorkshop3" Description="Argent Crucible">
+    <Engine version="1">
+      <Info value="BlockGround" />
+      <Info value="BlockFlying" />
+      <Info value="ModifyTerrainTextureOnPlacement" />
+      <CanUse value="HumanPlayer" />
+      <Menu value="2" />
+      <ImageIDBase value="WSG3" />
+      <DefaultSound value="WHP_CrucS1" />
+    </Engine>
+    <Game version="1">
+      <DialogID value="WSPN" />
+      <Cost value="800" />
+      <Multiplier value="1.0" />
+      <IncomeType value="2" />
+      <IncomeAmount value="40" />
+      <MaxHP value="400" />
+      <SightRange value="100" />
+      <Flags value="NotBuildable" />
+      <Flags value="HasHPBar" />
+      <Flags value="HasGoldToolTip" />
+      <HelpID value="hWH6" />
+      <UpgradeFrom value="WHP_SilverWorkshop2" />
+    </Game>
+  </Description>
+</Majesty>

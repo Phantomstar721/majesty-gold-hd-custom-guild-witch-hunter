@@ -1,0 +1,276 @@
+expression #WHP_IntentPurchaseNightglass 313
+expression #WHP_IntentPurchaseWindlass 314
+expression #WHP_IntentPurchaseGravebind 315
+expression #WHP_IntentPurchaseInlays 309
+expression #WHP_IntentPurchaseEmbersteel 310
+expression #WHP_IntentPurchaseSunhammer 311
+expression #WHP_IntentPurchaseSalts 312
+
+// Private fitting ownership follows the saved-attribute Weapon Oil precedent.
+// Selection/entry/duration/payment/exit follow Marketplace single-item visits.
+function WHP_OfferAttribute(integer Offer) is integer
+declare
+begin
+    if (Offer == 1) return #ATTRIB_ResearchWeaponLevel_3;
+    if (Offer == 2) return #ATTRIB_ResearchWeaponLevel_4;
+    if (Offer == 3) return #ATTRIB_ResearchArmorLevel_3;
+    if (Offer == 4) return #ATTRIB_ResearchArmorLevel_2;
+    if (Offer == 5) return #ATTRIB_ResearchTournament;
+    if (Offer == 6) return #ATTRIB_ResearchArrows;
+    if (Offer == 7) return #ATTRIB_ResearchGoodGuard;
+    return 0;
+end
+
+function WHP_OfferPrice(integer Offer) is integer
+declare
+begin
+    if (Offer == 1) return #WHP_Price_inlays;
+    if (Offer == 2) return #WHP_Price_embersteel;
+    if (Offer == 3) return #WHP_Price_sunhammer;
+    if (Offer == 4) return #WHP_Price_salts;
+    if (Offer == 5) return #WHP_Price_nightglass;
+    if (Offer == 6) return #WHP_Price_windlass;
+    if (Offer == 7) return #WHP_Price_gravebind;
+    return 0;
+end
+
+function WHP_CanBuy(agent Hero, integer Offer) is boolean
+declare
+begin
+    if ($WHP_Living(Hero) == FALSE) return FALSE;
+    if (Hero's "Subtype" != "Hero") return FALSE;
+    if (Offer == 1)
+        begin
+            if ($WHP_InlaysApplicable(Hero) == FALSE) return FALSE;
+            return $WHP_HasFitting(Hero, "WHP_Inlays") == FALSE;
+        end
+    if (Offer == 2)
+        begin
+            if ($WHP_IsHunter(Hero) == FALSE) return FALSE;
+            return $WHP_HasFitting(Hero, "WHP_Embersteel") == FALSE;
+        end
+    if (Offer == 3)
+        begin
+            if (Hero's "Title" != "Solarus") return FALSE;
+            return $WHP_HasFitting(Hero, "WHP_Sunhammer") == FALSE;
+        end
+    if (Offer == 4) return $WHP_CanBuySalts(Hero);
+    if (Offer == 5)
+        begin
+            if ($WHP_IsHunter(Hero) == FALSE) return FALSE;
+            return $WHP_HasFitting(Hero, "WHP_Nightglass") == FALSE;
+        end
+    if (Offer == 6)
+        begin
+            if ($WHP_IsHunter(Hero) == FALSE) return FALSE;
+            return $WHP_HasFitting(Hero, "WHP_Windlass") == FALSE;
+        end
+    if (Offer == 7)
+        begin
+            if ($WHP_IsHunter(Hero) == FALSE) return FALSE;
+            return $WHP_HasFitting(Hero, "WHP_Gravebind") == FALSE;
+        end
+    return FALSE;
+end
+
+function WHP_ValidVendor(agent Hero, agent Shop, integer Offer) is boolean
+declare
+    integer Attribute;
+begin
+    if ($WHP_Living(Shop) == FALSE) return FALSE;
+    if (Shop's "Title" != "WHP_SilverWorkshop") return FALSE;
+    if ($GetUnitPlayerNumber(Shop) != $GetUnitPlayerNumber(Hero)) return FALSE;
+    if ($GetAttribute(Shop, #ATTRIB_FirstStageBuilt) == 0) return FALSE;
+    Attribute = $WHP_OfferAttribute(Offer);
+    if (Attribute == 0) return FALSE;
+    return $GetAttribute(Shop, Attribute) != 0;
+end
+
+function WHP_PurchaseChoice(agent Hero) is boolean
+declare
+    list Shops, Eligible;
+    agent Shop;
+    integer Offer, Distance, Price;
+begin
+    if ($WHP_Living(Hero) == FALSE) return FALSE;
+    if (Hero's "Subtype" != "Hero") return FALSE;
+    Distance = $GetAttribute(Hero, #ATTRIB_SightRange) * ($GetAttribute(Hero, #ATTRIB_Intelligence) / 2);
+    $ListObjects(Hero, "Building", Distance, Shops, #MyPlayer, #CheckTitles, "WHP_SilverWorkshop", #ATTRIB_FirstStageBuilt, 1);
+    Offer = 1;
+    while (Offer <= 7) do
+        begin
+            Price = $WHP_OfferPrice(Offer);
+            if ($WHP_CanBuy(Hero, Offer))
+                if ($Total_Gold(Hero) >= Price)
+                    begin
+                        $ClearList(Eligible);
+                        foreach Shop in Shops do
+                            if ($WHP_ValidVendor(Hero, Shop, Offer)) Eligible << Shop;
+                        if ($ListSize(Eligible) > 0)
+                            begin
+                                if ($HasAttribute("WHP_Trade", Hero) == FALSE)
+                                    $AddAttribute(Hero, "WHP_Trade", "integer", 0);
+                                if ($HasAttribute("WHP_TradeVendor", Hero) == FALSE)
+                                    begin
+                                        $AddAttribute(Hero, "WHP_TradeVendor", "agentref", $NullAgent());
+                                        $AddAttribute(Hero, "WHP_TradePlayer", "integer", -1);
+                                    end
+                                if ($HasAttribute("WHP_PurchaseVisual", Hero) == FALSE)
+                                    $AddAttribute(Hero, "WHP_PurchaseVisual", "integer", 0);
+                                Hero's "WHP_PurchaseVisual" = 0;
+                                Hero's "WHP_Trade" = Offer;
+                                Hero's "Target" = $Loyalty_Mod_Pick_Closest(Hero, Eligible);
+                                Hero's "WHP_TradeVendor" = Hero's "Target";
+                                Hero's "WHP_TradePlayer" = $GetUnitPlayerNumber(Hero);
+                                Hero's "TaskName" = "WHP_WorkshopPurchase";
+                                if (Offer == 1) $SpecifyIntent(Hero, #WHP_IntentPurchaseInlays);
+                                if (Offer == 2) $SpecifyIntent(Hero, #WHP_IntentPurchaseEmbersteel);
+                                if (Offer == 3) $SpecifyIntent(Hero, #WHP_IntentPurchaseSunhammer);
+                                if (Offer == 4) $SpecifyIntent(Hero, #WHP_IntentPurchaseSalts);
+                                if (Offer == 5) $SpecifyIntent(Hero, #WHP_IntentPurchaseNightglass);
+                                if (Offer == 6) $SpecifyIntent(Hero, #WHP_IntentPurchaseWindlass);
+                                if (Offer == 7) $SpecifyIntent(Hero, #WHP_IntentPurchaseGravebind);
+                                return TRUE;
+                            end
+                    end
+            Offer += 1;
+        end
+    return FALSE;
+end
+
+function WHP_WorkshopVisited(agent Hero)
+declare
+begin
+    if ($WHP_TradeBound(Hero) == FALSE)
+        begin
+            $Reset_Tasks(Hero);
+            return;
+        end
+    if ($HasAttribute("WHP_Trade", Hero) == FALSE)
+        begin
+            $Reset_Tasks(Hero);
+            return;
+        end
+    if ($WHP_CanBuy(Hero, Hero's "WHP_Trade") == FALSE)
+        begin
+            $Reset_Tasks(Hero);
+            return;
+        end
+    if ($WHP_ValidVendor(Hero, Hero's "Target", Hero's "WHP_Trade") == FALSE)
+        begin
+            $Reset_Tasks(Hero);
+            return;
+        end
+    $Enter_Building(Hero, Hero's "Target");
+    $SetThreadInterval(Hero's "ActiveScript", #Buy_Market3_Item_Visit_Duration);
+    Hero's "ActiveScript" = $WHP_PurchaseFinish;
+end
+
+function WHP_TradeBound(agent Hero) is boolean
+declare
+begin
+    if ($WHP_Living(Hero) == FALSE) return FALSE;
+    if ($HasAttribute("WHP_TradeVendor", Hero) == FALSE) return FALSE;
+    if ($HasAttribute("WHP_TradePlayer", Hero) == FALSE) return FALSE;
+    if (Hero's "Target" != Hero's "WHP_TradeVendor") return FALSE;
+    return $GetUnitPlayerNumber(Hero) == Hero's "WHP_TradePlayer";
+end
+
+function WHP_PurchaseFinish(agent Hero)
+declare
+    integer Offer, Price;
+    boolean Used, Bound;
+begin
+    $SetThreadInterval(Hero's "ActiveScript", #Normal_Cycle);
+    Bound = $WHP_TradeBound(Hero);
+    if (Bound)
+        begin
+            if ($WHP_Living(Hero's "WHP_TradeVendor") == FALSE) Bound = FALSE;
+            else
+                if ($AgentInList(Hero, (Hero's "WHP_TradeVendor")'s "Occupants") == FALSE) Bound = FALSE;
+        end
+    if ($HasAttribute("WHP_Trade", Hero))
+        begin
+            Offer = Hero's "WHP_Trade";
+            // Consume the selected transaction before any callback can reenter.
+            Hero's "WHP_Trade" = 0;
+            Price = $WHP_OfferPrice(Offer);
+            if (Bound)
+            if ($WHP_CanBuy(Hero, Offer))
+                if ($WHP_ValidVendor(Hero, Hero's "Target", Offer))
+                    if ($Total_Gold(Hero) >= Price)
+                        begin
+                            $Spend_Gold(Hero, Hero's "Target", Price);
+                            if (Offer == 5) $WHP_ApplyNightglass(Hero);
+                            if (Offer == 6) $WHP_ApplyWindlass(Hero);
+                            if (Offer == 7) $WHP_ApplyGravebind(Hero);
+                            if (Offer == 1)
+                                begin
+                                    if ($HasAttribute("WHP_Inlays", Hero) == FALSE) $AddAttribute(Hero, "WHP_Inlays", "integer", 0);
+                                    Hero's "WHP_Inlays" = 1;
+                                    if ($HasAttribute("WHP_PurchaseVisual", Hero) == FALSE)
+                                        $AddAttribute(Hero, "WHP_PurchaseVisual", "integer", 0);
+                                    Hero's "WHP_PurchaseVisual" = 1;
+                                end
+                            if (Offer == 2)
+                                begin
+                                    if ($HasAttribute("WHP_Embersteel", Hero) == FALSE) $AddAttribute(Hero, "WHP_Embersteel", "integer", 0);
+                                    Hero's "WHP_Embersteel" = 1;
+                                end
+                            if (Offer == 3)
+                                begin
+                                    if ($HasAttribute("WHP_Sunhammer", Hero) == FALSE) $AddAttribute(Hero, "WHP_Sunhammer", "integer", 0);
+                                    Hero's "WHP_Sunhammer" = 1;
+                                    if ($HasAttribute("WHP_PurchaseVisual", Hero) == FALSE)
+                                        $AddAttribute(Hero, "WHP_PurchaseVisual", "integer", 0);
+                                    Hero's "WHP_PurchaseVisual" = 3;
+                                end
+                            if (Offer == 4)
+                                begin
+                                    $CreateNewInventoryItem(#WHP_SaltsItem, Hero, #Allow_Cloned_Quest_Item);
+                                    Used = $WHP_UseSalts(Hero);
+                                end
+                        end
+        end
+    Hero's "ActiveScript" = $WHP_PurchaseExit;
+end
+
+// Preserve the stock delayed exit/reset, tied to the actual entered vendor.
+function WHP_PurchaseExit(agent Hero)
+declare
+    agent Shop;
+    integer Visual;
+begin
+    Visual = 0;
+    if ($HasAttribute("WHP_PurchaseVisual", Hero))
+        begin
+            Visual = Hero's "WHP_PurchaseVisual";
+            // Consume once before native exit callbacks can reenter.
+            Hero's "WHP_PurchaseVisual" = 0;
+        end
+    Shop = $NullAgent();
+    if ($HasAttribute("WHP_TradeVendor", Hero))
+        begin
+            Shop = Hero's "WHP_TradeVendor";
+            Hero's "WHP_TradeVendor" = $NullAgent();
+        end
+    if ($WHP_Living(Shop))
+        if ($AgentInList(Hero, Shop's "Occupants"))
+            begin
+                $Exit_Building(Hero, Shop);
+                if ($WHP_Living(Hero))
+                if ($HasAttribute("WHP_TradePlayer", Hero))
+                if ($GetUnitPlayerNumber(Hero) == Hero's "WHP_TradePlayer")
+                    begin
+                        if (Visual == 1)
+                            if ($WHP_HasFitting(Hero, "WHP_Inlays"))
+                                $CreateEffector(Hero, "WHP_InlaysPurchased", 0);
+                        if (Visual == 3)
+                            if (Hero's "Title" == "Solarus")
+                            if ($WHP_HasFitting(Hero, "WHP_Sunhammer"))
+                                $CreateEffector(Hero, "WHP_SunhammerPurchased", 0);
+                    end
+                return;
+            end
+    $Reset_Tasks(Hero);
+end

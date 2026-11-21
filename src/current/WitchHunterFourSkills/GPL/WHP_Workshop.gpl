@@ -1,0 +1,200 @@
+// Stock completed-building queries and private saved fittings, no polling service.
+function WHP_ChapterLevel(agent Unit) is integer
+declare
+    list Buildings;
+    agent Building;
+    integer Level;
+begin
+    if ($IsValidGamePiece(Unit) == FALSE) return 0;
+    $ListObjects(Unit, "Building", -1, Buildings, #MyPlayer, #CheckTitles, "WHP_Chapterhouse", #ATTRIB_FirstStageBuilt, 1);
+    foreach Building in Buildings do
+        if ($WHP_Living(Building))
+            if (Building's "Level" > Level) Level = Building's "Level";
+    return Level;
+end
+
+function WHP_Research(agent Unit, integer Attribute) is boolean
+declare
+    list Buildings;
+    agent Building;
+    boolean Found;
+begin
+    if ($IsValidGamePiece(Unit) == FALSE) return FALSE;
+    $ListObjects(Unit, "Building", -1, Buildings, #MyPlayer, #CheckTitles, "WHP_SilverWorkshop", #ATTRIB_FirstStageBuilt, 1);
+    foreach Building in Buildings do
+        if ($WHP_Living(Building))
+            if ($GetAttribute(Building, Attribute) != 0) Found = TRUE;
+    return Found;
+end
+
+function WHP_HasFitting(agent Unit, string Fitting) is boolean
+declare
+begin
+    if ($IsValidGamePiece(Unit) == FALSE) return FALSE;
+    if ($HasAttribute(Fitting, Unit) == FALSE) return FALSE;
+    if (Fitting == "WHP_Inlays") return Unit's "WHP_Inlays" != 0;
+    if (Fitting == "WHP_Embersteel") return Unit's "WHP_Embersteel" != 0;
+    if (Fitting == "WHP_Sunhammer") return Unit's "WHP_Sunhammer" != 0;
+    if (Fitting == "WHP_Salts") return Unit's "WHP_Salts" != 0;
+    if (Fitting == "WHP_Nightglass") return Unit's "WHP_Nightglass" != 0;
+    if (Fitting == "WHP_Windlass") return Unit's "WHP_Windlass" != 0;
+    if (Fitting == "WHP_Gravebind") return Unit's "WHP_Gravebind" != 0;
+    return FALSE;
+end
+
+function WHP_IsUndead(agent Target) is boolean
+declare
+begin
+    if ($IsValidGamePiece(Target) == FALSE) return FALSE;
+    return Target's "Subtype" == "Undead";
+end
+
+function WHP_ReleasePotency(agent Hunter, agent Target) is integer
+declare
+begin
+    if ($WHP_Research(Hunter, #ATTRIB_ResearchWeaponLevel_2) == FALSE) return #WHP_BurnBase;
+    if ($WHP_IsUndead(Target)) return #WHP_BurnUndead;
+    return #WHP_BurnRefined;
+end
+
+function WHP_InlaysApplicable(agent Hero) is boolean
+declare
+begin
+    if ($WHP_Living(Hero) == FALSE) return FALSE;
+    if (Hero's "Subtype" != "Hero") return FALSE;
+    if ($GetAttribute(Hero, #ATTRIB_WeaponTypeIndex) <= 0) return FALSE;
+    if ($HasAttribute("attack_action", Hero) == FALSE) return FALSE;
+    if (Hero's "attack_action" == "") return FALSE;
+    // Stock spell-only heroes carry equipment but dispatch no weapon attack.
+    return Hero's "attack_action" != "do_nothing";
+end
+
+function WHP_InlayRecovery(agent Attacker, agent Defender, integer Stopped) is integer
+declare
+    integer Recovery;
+begin
+    if (Stopped <= 0) return 0;
+    if ($WHP_InlaysApplicable(Attacker) == FALSE) return 0;
+    if ($WHP_HasFitting(Attacker, "WHP_Inlays") == FALSE) return 0;
+    Recovery = #WHP_InlaysNormal;
+    if ($WHP_IsUndead(Defender)) Recovery = #WHP_InlaysUndead;
+    if (Recovery > Stopped) Recovery = Stopped;
+    return Recovery;
+end
+
+function WHP_SunhammerCharge(agent Caster)
+declare
+begin
+    if ($WHP_Living(Caster) == FALSE) return;
+    if (Caster's "Title" != "Solarus") return;
+    if ($WHP_HasFitting(Caster, "WHP_Sunhammer") == FALSE) return;
+    if ($HasAttribute("WHP_SunhammerPlayer", Caster) == FALSE)
+        $AddAttribute(Caster, "WHP_SunhammerPlayer", "integer", -1);
+    Caster's "WHP_SunhammerPlayer" = $GetUnitPlayerNumber(Caster);
+    $CreateEffector(Caster, "WHP_SunhammerCharge", 1, "infinite");
+end
+
+function WHP_SunhammerBonus(agent Attacker, agent Defender) is integer
+declare
+begin
+    if ($WHP_Living(Attacker) == FALSE) return 0;
+    if (Attacker's "Title" != "Solarus") return 0;
+    if (Attacker's "AttackType" != 1) return 0;
+    if ($WHP_HasFitting(Attacker, "WHP_Sunhammer") == FALSE) return 0;
+    if ($CheckEffector(Attacker, "WHP_SunhammerCharge") == FALSE) return 0;
+    // The ordinary successful weapon hit owns consumption, even if fire is resisted.
+    $DeleteEffector(Attacker, "WHP_SunhammerCharge");
+    if ($HasAttribute("WHP_SunhammerPlayer", Attacker) == FALSE) return 0;
+    if (Attacker's "WHP_SunhammerPlayer" != $GetUnitPlayerNumber(Attacker)) return 0;
+    if ($Does_Resist_Fire(Defender)) return 0;
+    if ($WHP_IsUndead(Defender)) return #WHP_SunhammerUndead;
+    return #WHP_SunhammerNormal;
+end
+
+function WHP_BastionHit(agent Attacker, agent Defender)
+declare
+begin
+    if ($WHP_Living(Attacker) == FALSE) return;
+    if ($WHP_Living(Defender) == FALSE) return;
+    if (Attacker's "Title" != "Guardhouse") return;
+    if ($GetAttribute(Attacker, #ATTRIB_ResearchArrows) == 0) return;
+    if ($WHP_Research(Attacker, #ATTRIB_ResearchArmorLevel_4) == FALSE) return;
+    if ((Defender's "Type" == "Building") || (Defender's "Type" == "Lair")) return;
+    if ($HasAttribute("WHP_BastionPlayer", Defender) == FALSE)
+        begin
+            $AddAttribute(Defender, "WHP_BastionPlayer", "integer", -1);
+            $AddAttribute(Defender, "WHP_BastionVictimPlayer", "integer", -1);
+        end
+    Defender's "WHP_BastionPlayer" = $GetUnitPlayerNumber(Attacker);
+    Defender's "WHP_BastionVictimPlayer" = $GetUnitPlayerNumber(Defender);
+    $CreateEffector(Defender, "WHP_Bastion", #WHP_BastionDuration);
+end
+
+function WHP_BastionPercent(agent Attacker, agent Defender) is integer
+declare
+begin
+    if (Defender's "Type" != "Building") return 0;
+    if ($HasAttribute("WHP_BastionPlayer", Attacker) == FALSE) return 0;
+    if ($CheckEffector(Attacker, "WHP_Bastion") == FALSE) return 0;
+    if ($GetUnitPlayerNumber(Attacker) != Attacker's "WHP_BastionVictimPlayer") return 0;
+    if ($GetUnitPlayerNumber(Defender) != Attacker's "WHP_BastionPlayer") return 0;
+    return #WHP_BastionPercent;
+end
+
+function WHP_UseSalts(agent Hero) is boolean
+declare
+begin
+    if ($WHP_Living(Hero) == FALSE) return FALSE;
+    $WHP_MigrateSalts(Hero);
+    if ($AgentHasInventoryItem(#WHP_SaltsItem, Hero) == FALSE) return FALSE;
+    if ($CheckEffector(Hero, "Ratman_Plague_Icon") == FALSE) return FALSE;
+    // Consume the real item before the existing plague-deletion callback.
+    $DeleteInventoryItem(#WHP_SaltsItem, Hero);
+    if ($AgentHasInventoryItem(#WHP_SaltsItem, Hero)) return FALSE;
+    $DeleteEffector(Hero, "Ratman_Plague_Icon");
+    $CreateEffector(Hero, "WHP_SaltsImmunity", 60000);
+    return TRUE;
+end
+
+
+function WHP_PlagueProtected(agent Target) is boolean
+declare
+begin
+    if ($IsValidGamePiece(Target) == FALSE) return FALSE;
+    return $CheckEffector(Target, "WHP_SaltsImmunity");
+end
+
+// Stock Phoenix Phial numeric inventory contract. The legacy
+// attribute is only a migration receipt, never new carried-dose ownership.
+// Existing purchase/use callbacks own conversion; no new scan or timer.
+function WHP_MigrateSalts(agent Hero)
+declare
+begin
+    if ($WHP_Living(Hero) == FALSE) return;
+    if ($HasAttribute("WHP_Salts", Hero) == FALSE) return;
+    if (Hero's "WHP_Salts" == 0) return;
+    if ($AgentHasInventoryItem(#WHP_SaltsItem, Hero) == FALSE)
+        $CreateNewInventoryItem(#WHP_SaltsItem, Hero, #Allow_Cloned_Quest_Item);
+    // A failed creation must never discard the saved dose.
+    if ($AgentHasInventoryItem(#WHP_SaltsItem, Hero)) Hero's "WHP_Salts" = 0;
+end
+
+function WHP_CanBuySalts(agent Hero) is boolean
+declare
+begin
+    $WHP_MigrateSalts(Hero);
+    // Retain a legacy dose if native creation could not confirm membership.
+    if ($WHP_HasFitting(Hero, "WHP_Salts")) return FALSE;
+    return $AgentHasInventoryItem(#WHP_SaltsItem, Hero) == FALSE;
+end
+
+// The shared stock event runs after both plague application statements.
+// Cure through the existing inventory and native effector cleanup, then let
+// the interrupted stock call return normally. Never replace the hero's task.
+function WHP_StatusApplied(agent Recipient, string Status)
+declare
+    boolean Used;
+begin
+    if (Status != "Ratman_Plague_Icon") return;
+    Used = $WHP_UseSalts(Recipient);
+end
