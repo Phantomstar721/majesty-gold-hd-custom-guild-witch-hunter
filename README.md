@@ -13,7 +13,7 @@ Witch Hunters bring hand crossbows, hatchets, and silver to **Majesty Gold HD**.
 
 Costs are the base amounts. Both buildings have a base income value of 40 at every tier.
 
-- **Chapterhouse.** Requires a level 3 Palace. Each Chapterhouse houses up to four Witch Hunters at any tier. A Hunter costs **450 gold** to recruit and takes **12 seconds**. Each guild tier can recruit. A completed tier 2 unlocks Breach the Den in its Spells panel. A completed tier 3 enables the sovereign toolbar spell and lets eligible Solarii learn Dawnfall.
+- **Chapterhouse.** Requires a level 3 Palace. Each Chapterhouse houses up to four Witch Hunters at any tier. A Hunter costs **450 gold** to recruit and takes **12 seconds**. Each guild tier can recruit. A completed tier 2 unlocks Breach the Den in both its Spells panel and the sovereign spell bar. A completed tier 3 lets eligible Solarii learn Dawnfall.
 - **Argent Crucible.** Requires a Chapterhouse and is limited to one per kingdom. Upgrading is available immediately. To open its services, choose **Hire** and select a living Witch Hunter from your kingdom at **level 8 or higher**. Once she reaches the Crucible, she leaves adventuring and the guild permanently. This unlocks its Research and Fittings services and the Visitors view. You need a completed, staffed level 3 Crucible to use Plague Control.
 
 ## Witch Hunter
@@ -86,7 +86,7 @@ Alchemist Lab is optional. Without its compatible support, the Cleanse row remai
 
 | Cost | Duration | Where to cast | Valid target |
 | ---: | ---: | --- | --- |
-| **500 gold** | **3 minutes** | Spells panel on a completed **level 2 or higher** Chapterhouse. Sovereign spell bar with an owned completed **level 3** Chapterhouse. | A **living hostile monster lair**. |
+| **500 gold** | **3 minutes** | Chapterhouse Spells panel or sovereign spell bar, both from a completed **level 2 Chapterhouse** onward. | A **living hostile monster lair**. |
 
 Breach makes the lair more attractive to heroes in your kingdom and lets them deal **full normal weapon damage** to it instead of the usual half damage. It counts like a **500-gold incentive** when heroes decide what to attack. The cast has its own marker and effects. It creates no payable bounty, so the spell cost is the only automatic charge. An ordinary attack flag can still be placed on the same lair. Breach encourages a raid and leaves the decision to each hero.
 
