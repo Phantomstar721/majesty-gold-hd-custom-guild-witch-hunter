@@ -22,6 +22,14 @@ begin
     return Target's "WHP_BurnPotency";
 end
 
+// The shot ticket encodes Refined Silver in its release-time potency.
+function WHP_PrimaryBurnTicks(integer Potency) is integer
+declare
+begin
+    if ((Potency == #WHP_BurnRefined) || (Potency == #WHP_BurnUndead)) return #WHP_BurnRefinedTicks;
+    return #WHP_BurnTicks;
+end
+
 function WHP_SetBurn(agent Hunter, agent Target, integer Potency, integer Ticks, boolean Primary)
 declare
     boolean Existing;
@@ -74,7 +82,7 @@ begin
     if ($WHP_OwnsMark(Hunter, Target) == FALSE) return;
     if ($WHP_BurnValid(Target) == FALSE) return;
     if (Target's "WHP_BurnSource" != Hunter) return;
-    Payout = Target's "WHP_BurnTicks" * $WHP_BurnPotency(Target) + #WHP_EmberBonus;
+    Payout = Target's "WHP_BurnTicks" * $WHP_BurnPotency(Target) * #WHP_EmberMultiplier;
     // End callback consumes state and thread BEFORE any payout/reentry.
     $DeleteEffector(Target, "WHP_Burn");
     $AdjustAttribute(Target, #ATTRIB_HP, -$WHP_StatusDamage(Hunter, Target, Payout, 0));
@@ -82,6 +90,7 @@ end
 
 function WHP_FireRefresh(agent Caster, agent Target)
 declare
+    integer FullBudget;
 begin
     if ($IsValidGamePiece(Caster) == FALSE) return;
     if (Caster's "Title" != "Solarus") return;
@@ -91,9 +100,10 @@ begin
     if ($HasAttribute("WHP_BurnPrimary", Target) == FALSE) return;
     if (Target's "WHP_BurnPrimary" == FALSE) return;
     if (Target's "WHP_BurnRefreshed") return;
-    if (Target's "WHP_BurnTicks" >= #WHP_BurnTicks) return;
+    FullBudget = $WHP_PrimaryBurnTicks($WHP_BurnPotency(Target));
+    if (Target's "WHP_BurnTicks" >= FullBudget) return;
     Target's "WHP_BurnRefreshed" = TRUE;
-    Target's "WHP_BurnTicks" = #WHP_BurnTicks;
+    Target's "WHP_BurnTicks" = FullBudget;
 end
 
 function WHP_SpreadSeed(agent Caster, agent Target) is boolean

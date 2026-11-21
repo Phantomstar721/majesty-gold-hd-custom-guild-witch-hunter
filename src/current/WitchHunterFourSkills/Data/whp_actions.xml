@@ -10,7 +10,7 @@
       <Script type="0" cProc="0" GPLFunction="WHP_BoltReleased" />
     </Engine>
   </Description>
-  <Description type="Action" subType="Standard" ID="WHDF" Name="WHP_DawnfallCast" Description="Level-6 Solarii may leap across the realm to a Hunter's marked quarry or a breached lair. Recharges in 30 seconds.">
+  <Description type="Action" subType="Standard" ID="WHDF" Name="WHP_DawnfallCast" Description="Level-6 Solarii may leap across the realm to a Hunter's marked quarry or a breached lair. Recharges in 90 seconds.">
     <Engine version="1">
       <ImageSet value="Special-2" />
       <CompletionImageSet value="Stand" />

@@ -164,7 +164,7 @@
       "subject_id": "WHP1",
       "unlock_level": 3,
       "display_text": "Silver Bolt",
-      "tooltip_text": "A silver crossbow bolt burns its target for 2 damage every 2 seconds, three times, and strips Magic Mirror or Damage Shield. Recharges in 15 seconds. Refined Silver strengthens the burn.",
+      "tooltip_text": "A silver crossbow bolt burns its target for 2 damage every 2 seconds, three times, and strips Magic Mirror or Damage Shield. Recharges in 15 seconds. Refined Silver adds a fourth tick and raises damage per tick to 3, or 4 against undead.",
       "image_id": "WIsl",
       "image_set": 1019
     },
@@ -232,7 +232,7 @@
       "feature_key": "whp-owned-embersteel",
       "attribute_symbol": "WHP_Embersteel",
       "display_text": "Embersteel Hatchet",
-      "tooltip_text": "A hatchet hit on the Hunter's marked quarry consumes her Silver Burn, dealing its remaining damage plus 2.",
+      "tooltip_text": "A hatchet hit on the Hunter's marked quarry consumes her Silver Burn, dealing twice its remaining damage immediately.",
       "image_id": "WIem",
       "image_set": 1019,
       "list_category": "enchantments"
@@ -265,7 +265,7 @@
       "subject_id": "WH06",
       "unlock_level": 0,
       "display_text": "Silver Burn",
-      "tooltip_text": "Silver fire deals damage every 2 seconds. Refined Silver strengthens the flames, and allied Solarii fire can renew them.",
+      "tooltip_text": "Silver fire deals damage every 2 seconds. Refined Silver makes the primary burn tick four times instead of three. Allied Solarii fire can renew it.",
       "image_id": "WXbu",
       "image_set": 1019
     },
@@ -354,7 +354,7 @@
       "subject_id": "WHDF",
       "unlock_level": 0,
       "display_text": "Dawnfall",
-      "tooltip_text": "Leap across the realm to an enemy marked by a Witch Hunter or a lair affected by Breach the Den. Requires level 6 and a completed level 3 Chapterhouse. Recharges for 30 seconds after arrival.",
+      "tooltip_text": "Leap across the realm to an enemy marked by a Witch Hunter or a lair affected by Breach the Den. Requires level 6 and a completed level 3 Chapterhouse. Recharges for 90 seconds after arrival.",
       "image_id": "WIdf",
       "image_set": 1019
     },
@@ -362,7 +362,7 @@
       "type": "stock.ap92-sovereign-toolbar-action.v1",
       "panel_key": "whp.chapter-spells",
       "action_key": "breach-the-den",
-      "required_level": 3,
+      "required_level": 2,
       "icon_id": "WBTb",
       "icon_set": 1001,
       "hover_text": "Cast Breach the Den."

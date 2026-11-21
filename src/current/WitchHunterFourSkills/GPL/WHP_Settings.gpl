@@ -4,9 +4,10 @@ expression #WHP_BurnBase 2
 expression #WHP_BurnRefined 3
 expression #WHP_BurnUndead 4
 expression #WHP_BurnTicks 3
+expression #WHP_BurnRefinedTicks 4
 expression #WHP_BurnInterval 2000
 expression #WHP_SecondaryTicks 2
-expression #WHP_EmberBonus 2
+expression #WHP_EmberMultiplier 2
 expression #WHP_InlaysNormal 2
 expression #WHP_InlaysUndead 4
 expression #WHP_SunhammerNormal 5
@@ -19,7 +20,7 @@ expression #WHP_DawnfallLevel 6
 expression #WHP_DawnfallMinRange 100
 expression #WHP_DawnfallDiscoveryRange 600
 expression #WHP_DawnfallScoringDistance 100
-expression #WHP_DawnfallCooldown 30000
+expression #WHP_DawnfallCooldown 90000
 expression #WHP_Price_refined 0
 expression #WHP_Price_salts 60
 expression #WHP_Price_inlays 150

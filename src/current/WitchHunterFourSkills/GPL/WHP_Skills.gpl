@@ -357,7 +357,7 @@ begin
     // Approved: removing a protection adds no separate HP debit.
     if ($WHP_Living(Target) == FALSE) return;
     if ((Target's "Type" == "Building") || (Target's "Type" == "Lair")) return;
-    $WHP_SetBurn(Hunter, Target, Potency, #WHP_BurnTicks, TRUE);
+    $WHP_SetBurn(Hunter, Target, Potency, $WHP_PrimaryBurnTicks(Potency), TRUE);
 end
 
 function WHP_Noop(agent Unit)
